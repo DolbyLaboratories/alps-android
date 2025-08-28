@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Namings of base dimensions levels: small_xs, small, normal, large, large_xl -->
+    <!--Margins and paddings-->
+    <dimen name="small_xs">1dp</dimen>
+    <dimen name="small_50">4dp</dimen>
+    <dimen name="small">8dp</dimen>
+    <dimen name="normal_67">8dp</dimen>
+    <dimen name="normal">16dp</dimen>
+    <dimen name="normal_133">24dp</dimen>
+    <dimen name="large">24dp</dimen>
+    <dimen name="large_133">32dp</dimen>
+    <dimen name="large_xl">64dp</dimen>
+    <dimen name="large_xl_133">96dp</dimen>
+    <dimen name="large_2xl">128dp</dimen>
+
+    <!--Text sizes-->
+    <dimen name="text_size_4xs">10sp</dimen>
+    <dimen name="text_size_3xs">12sp</dimen>
+    <dimen name="text_size_2xs">12sp</dimen>
+    <dimen name="text_size_xs">16sp</dimen>
+    <dimen name="text_size_s">16sp</dimen>
+    <dimen name="text_size_m">18sp</dimen>
+    <dimen name="text_size_l">21sp</dimen>
+    <dimen name="text_size_xl">26sp</dimen>
+    <dimen name="text_size_2xl">40sp</dimen>
+
+    <!--Custom dimensions-->
+    <dimen name="content_thumbnail_width">89dp</dimen>
+    <dimen name="content_thumbnail_height">50dp</dimen>
+    <dimen name="settings_dialog_width">270dp</dimen>
+
+    <dimen name="exo_styled_bottom_bar_height">150dp</dimen>
+    <dimen name="player_control_size">56dp</dimen>
+    <dimen name="player_control_radius">28dp</dimen>
+</resources>

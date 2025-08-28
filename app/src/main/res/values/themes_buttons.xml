@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Dolby.Widget.Button" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">@dimen/normal_133</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:paddingHorizontal">@dimen/normal</item>
+        <item name="android:paddingVertical">@dimen/normal_67</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:textAppearance">@style/Dolby.TextAppearance.Button</item>
+        <item name="android:minWidth">160dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="IconButton">
+        <item name="android:padding">@dimen/small_xs</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="IconButton.Settings">
+        <item name="android:src">@drawable/settings_selector</item>
+    </style>
+</resources>

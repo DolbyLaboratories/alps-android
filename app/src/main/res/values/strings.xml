@@ -1,0 +1,35 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Dolby ALPS</string>
+
+    <!--General errors -->
+    <string name="error_cleartext_not_permitted">Cleartext HTTP traffic not permitted. See https://developer.android.com/guide/topics/media/issues/cleartext-not-permitted</string>
+    <string name="storage_permission_denied">Permission to access storage was denied</string>
+
+    <!--Content screen errors-->
+    <string name="content_refresh_failed_message">Content refreshing failed. Check internet connection and provided URLs.</string>
+    <string name="missing_manifest_path_message">Content doesn\'t provide Manifest url. Check content JSON list.</string>
+
+    <!-- Intents -->
+    <string name="unexpected_intent_action">Unexpected intent action: <xliff:g id="action">%1$s</xliff:g></string>
+
+    <!-- Playback errors -->
+    <string name="error_alps_init">Alps initialization failed</string>
+    <string name="error_generic">Playback failed</string>
+    <string name="error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>
+    <string name="error_no_decoder">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
+    <string name="error_no_secure_decoder">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
+    <string name="error_querying_decoders">Unable to query device decoders</string>
+    <string name="error_instantiating_decoder">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>
+    <string name="error_unsupported_video">Media includes video tracks, but none are playable by this device</string>
+    <string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>
+
+    <!--Custom Player controls-->
+    <string name="de_button">Dialog enhancer</string>
+    <string name="presentation_button">Presentation</string>
+
+    <!--Presentations list dialog-->
+    <string name="presentations_list_title">Audio option</string>
+
+    <!-- Settings dialog-->
+    <string name="app_version_info">Version %1$s</string>
+</resources>

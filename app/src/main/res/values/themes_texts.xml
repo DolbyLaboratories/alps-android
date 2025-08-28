@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Dolby.TextAppearance" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="android:fontFamily">@font/avenir_next_ltpro</item>
+        <item name="fontFamily">@font/avenir_next_ltpro</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Headline1">
+        <item name="android:textSize">@dimen/text_size_2xl</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Headline1.Bold">
+        <item name="android:textStyle">bold</item>
+        <item name="fontWeight">700</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Headline2">
+        <item name="android:textSize">@dimen/text_size_s</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Headline2.Bold">
+        <item name="android:textStyle">bold</item>
+        <item name="fontWeight">700</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Headline3">
+        <item name="android:textSize">@dimen/text_size_xs</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Headline3.Bold">
+        <item name="android:textStyle">bold</item>
+        <item name="fontWeight">700</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Body1">
+        <item name="android:textSize">@dimen/text_size_3xs</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Body1.Bold">
+        <item name="android:textStyle">bold</item>
+        <item name="fontWeight">700</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Body1.Hint">
+        <item name="android:textColor">@color/manatee</item>
+    </style>
+
+    <!--styles for buttons-->
+    <style name="Dolby.TextAppearance.Button" parent="TextAppearance.MaterialComponents.Button">
+<!--        <item name="android:textColor">@color/button_text_color</item>-->
+        <item name="android:letterSpacing">0.0</item>
+        <item name="android:fontFamily">@font/avenir_next_ltpro</item>
+        <item name="fontFamily">@font/avenir_next_ltpro</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Category" parent="Dolby.TextAppearance.Headline2.Bold">
+        <item name="android:textAlignment">center</item>
+        <item name="android:paddingHorizontal">@dimen/normal_133</item>
+        <item name="android:letterSpacing">0.0</item>
+        <item name="android:paddingVertical">@dimen/small_50</item>
+    </style>
+
+    <style name="Dolby.TextAppearance.Time">
+        <item name="android:textSize">@dimen/text_size_xs</item>
+        <item name="android:lineHeight">@dimen/text_size_s</item>
+    </style>
+
+
+</resources>

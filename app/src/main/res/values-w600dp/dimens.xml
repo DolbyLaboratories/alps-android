@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Namings of base dimensions levels: small_xs, small, normal, large, large_xl -->
+    <!--Margins and paddings-->
+    <dimen name="small_xs">2dp</dimen>
+    <dimen name="small_50">6dp</dimen>
+    <dimen name="small">10dp</dimen>
+    <dimen name="normal_67">16dp</dimen>
+    <dimen name="normal">24dp</dimen>
+    <dimen name="normal_133">32dp</dimen>
+    <dimen name="large">64dp</dimen>
+    <dimen name="large_133">78dp</dimen>
+    <dimen name="large_xl">96dp</dimen>
+    <dimen name="large_xl_133">128dp</dimen>
+    <dimen name="large_2xl">192dp</dimen>
+
+    <!--Text sizes-->
+    <dimen name="text_size_4xs">14sp</dimen>
+    <dimen name="text_size_3xs">16sp</dimen>
+    <dimen name="text_size_2xs">18sp</dimen>
+    <dimen name="text_size_xs">20sp</dimen>
+    <dimen name="text_size_s">24sp</dimen>
+    <dimen name="text_size_m">27sp</dimen>
+    <dimen name="text_size_l">30sp</dimen>
+    <dimen name="text_size_xl">36sp</dimen>
+    <dimen name="text_size_2xl">40sp</dimen>
+
+    <!--Custom dimensions-->
+    <dimen name="content_thumbnail_width">178dp</dimen>
+    <dimen name="content_thumbnail_height">100dp</dimen>
+</resources>

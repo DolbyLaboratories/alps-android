@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.dolby.android.alps.app.ui.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_settingsDialog"
+            app:destination="@id/settingsDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/settingsDialog"
+        android:name="com.dolby.android.alps.app.ui.settings.SettingsDialog"
+        android:label="SettingsDialog"
+        tools:layout="@layout/settings_dialog" />
+</navigation>
