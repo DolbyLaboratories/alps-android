@@ -35,11 +35,13 @@ extern "C"
     #include "dlb_alps_native.h"
 }
 
-static JavaVM *globalJavaVM = nullptr;
 static std::mutex mtx;
-static alps_ctx *ctx;
-static void *allocatedMemory = nullptr;
-static jobject presChangedCallbackKotlin = nullptr;
+static JavaVM *globalJavaVM = nullptr;
+
+jint JNI_OnLoad(JavaVM* vm, void*) {
+    globalJavaVM = vm;
+    return JNI_VERSION_1_6;
+}
 
 static void throwJniException(JNIEnv* env, const std::string& message) {
     jclass exceptionClass = env->FindClass("com/dolby/android/alps/utils/AlpsException$JNI");
@@ -92,29 +94,34 @@ static void handleNativeError(JNIEnv* env, alps_ret error) {
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_getVersion(JNIEnv *env, jobject thiz) {
+Java_com_dolby_android_alps_alpsnative_AlpsNativeInfo_getVersion(JNIEnv *env, jobject thiz) {
     jstring version = env->NewStringUTF(alps_version());
     return version;
 }
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_queryMem(JNIEnv *env, jobject thiz) {
-    std::lock_guard<std::mutex> lock(mtx);
-
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_create(JNIEnv *env, jobject thiz) {
+    void *memory = nullptr;
+    alps_ctx *alps;
     size_t memorySize;
     alps_ret ret = alps_query_mem(&memorySize);
     if (ret == ALPS_RET_OK) {
         ALOGI("alps_query_mem successful, size: %zu", memorySize);
-        if (allocatedMemory != nullptr) {
-            free(allocatedMemory);
-        }
-        allocatedMemory = malloc(memorySize);
-        if (allocatedMemory == nullptr) {
+        memory = malloc(memorySize);
+        if (memory == nullptr) {
             ALOGE("Failed to allocate memory");
             throwJniException(env, "Failed to allocate memory");
         }
-        return memorySize;
+
+        ret = alps_init(&alps, memory);
+        if (ret == ALPS_RET_OK) {
+            ALOGI("alps_init successful");
+            return (jlong)(uintptr_t)alps;
+        } else {
+            ALOGE("alps_init failed, error: %d", ret);
+            handleNativeError(env, ret);
+        }
     } else {
         ALOGE("alps_query_mem failed, error: %d", ret);
         handleNativeError(env, ret);
@@ -125,46 +132,35 @@ Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_queryMem(JNIEnv *env, jobj
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_initialize(JNIEnv *env, jobject thiz) {
-    std::lock_guard<std::mutex> lock(mtx);
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_destroy(JNIEnv *env,
+                                                                 jobject thiz,
+                                                                 jlong alpsHandle) {
+    auto *alps = (alps_ctx*)(uintptr_t)alpsHandle;
 
-    if (allocatedMemory == nullptr) {
-        ALOGE("alps_init failed, memory not allocated");
-        throwJniException(env, "Memory not allocated when initializing");
+    auto callback = (jobject)alps_get_presentations_changed_callback_context(alps);
+    if (callback != nullptr) {
+        env->DeleteGlobalRef(callback);
     }
 
-    alps_ret ret = alps_init(&ctx, allocatedMemory);
-    if (ret == ALPS_RET_OK) {
-        ALOGI("alps_init successful");
-    } else {
-        ALOGE("alps_init failed, error: %d", ret);
-        handleNativeError(env, ret);
-    }
-}
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_destroy(JNIEnv *env, jobject thiz) {
-    std::lock_guard<std::mutex> lock(mtx);
-    alps_destroy(ctx);
-    if (allocatedMemory != nullptr) {
-        free(allocatedMemory);
-        allocatedMemory = nullptr;
+    alps_destroy(alps);
+    if (alps != nullptr) {
+        free(alps);
+        alps = nullptr;
     }
     ALOGI("Alps destroyed");
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_processIsobmffSegment(JNIEnv *env,
-                                                                            jobject thiz,
-                                                                            jobject buffer) {
-    std::lock_guard<std::mutex> lock(mtx);
-
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_processIsobmffSegment(JNIEnv *env,
+                                                                               jobject thiz,
+                                                                               jlong alpsHandle,
+                                                                               jobject buffer) {
+    auto *alps = (alps_ctx*)(uintptr_t)alpsHandle;
     auto bufferPtr = reinterpret_cast<uint8_t*>(env->GetDirectBufferAddress(buffer));
     auto bufferSize = (int32_t)env->GetDirectBufferCapacity(buffer);
 
-    alps_ret ret = alps_process_isobmff_segment(ctx, bufferPtr, bufferSize);
+    alps_ret ret = alps_process_isobmff_segment(alps, bufferPtr, bufferSize);
 
     if (ret == ALPS_RET_OK) {
         ALOGI("alps_process_isobmff_segment successful");
@@ -176,11 +172,15 @@ Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_processIsobmffSegment(JNIE
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_getPresentations(JNIEnv *env, jobject thiz) {
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_getPresentations(JNIEnv *env,
+                                                                          jobject thiz,
+                                                                          jlong alpsHandle) {
+    auto *alps = (alps_ctx*)(uintptr_t)alpsHandle;
+
     alps_presentation *nativePresentationsList = nullptr;
     size_t presentationsCount;
 
-    alps_ret ret = alps_get_presentations(ctx, &nativePresentationsList, &presentationsCount);
+    alps_ret ret = alps_get_presentations(alps, &nativePresentationsList, &presentationsCount);
     if (ret == ALPS_RET_OK) {
         ALOGI("alps_get_presentations successful. Presentations count: %zu", presentationsCount);
         jclass arrayListClass = env->FindClass("java/util/ArrayList");
@@ -216,10 +216,13 @@ Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_getPresentations(JNIEnv *e
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_getActivePresentationId(JNIEnv *env, jobject thiz) {
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_getActivePresentationId(JNIEnv *env,
+                                                                                 jobject thiz,
+                                                                                 jlong alpsHandle) {
+    auto *alps = (alps_ctx*)(uintptr_t)alpsHandle;
     jint activeIndex;
 
-    alps_ret ret = alps_get_active_presentation_id(ctx, &activeIndex);
+    alps_ret ret = alps_get_active_presentation_id(alps, &activeIndex);
     if (ret == ALPS_RET_OK) {
         ALOGI("alps_get_active_presentation_id successful");
         return activeIndex;
@@ -232,9 +235,11 @@ Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_getActivePresentationId(JN
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_setActivePresentationId(JNIEnv *env, jobject thiz,
-                                                                         jint id) {
-    alps_ret ret = alps_set_active_presentation_id(ctx, id);
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_setActivePresentationId(JNIEnv *env, jobject thiz,
+                                                                                 jlong alpsHandle,
+                                                                                 jint id) {
+    auto *alps = (alps_ctx*)(uintptr_t)alpsHandle;
+    alps_ret ret = alps_set_active_presentation_id(alps, id);
     if (ret == ALPS_RET_OK) {
         ALOGI("alps_set_active_presentation_id successful");
     } else {
@@ -243,43 +248,54 @@ Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_setActivePresentationId(JN
     }
 }
 
-void presentationChangedCallback(void *callbackCtx) {
-    JNIEnv *env;
-    bool attached = false;
+JNIEnv* getJNIEnv() {
+    JNIEnv* env = nullptr;
+    jint result = globalJavaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
 
-    if (globalJavaVM->GetEnv((void**)&env, JNI_VERSION_1_6)) {
-        globalJavaVM->AttachCurrentThread(&env, nullptr);
-        attached = true;
+    if (result == JNI_OK) {
+        return env;
+    } else if (result == JNI_EDETACHED) {
+        if (globalJavaVM->AttachCurrentThread(&env, nullptr) != JNI_OK) {
+            return nullptr;
+        }
+        return env;
+    } else {
+        return nullptr;
+    }
+}
+
+
+void presentationChangedCallback(void *callbackCtx) {
+    std::lock_guard<std::mutex> lock(mtx);
+
+    auto callback = (jobject)callbackCtx;
+    JNIEnv *env = getJNIEnv();
+
+    if (env == nullptr) {
+        ALOGE("presentationChangedCallback failed. Couldn't get JNIEnv.");
+        return;
     }
 
-    if (presChangedCallbackKotlin != nullptr) {
-        jclass clazz = env->GetObjectClass(presChangedCallbackKotlin);
+    if (callback != nullptr) {
+        jclass clazz = env->GetObjectClass(callback);
         jmethodID methodId = env->GetMethodID(clazz, "onPresentationsChanged", "()V");
 
-        env->CallVoidMethod(presChangedCallbackKotlin, methodId);
-    }
-
-    if (attached) {
-        globalJavaVM->DetachCurrentThread();
+        env->CallVoidMethod(callback, methodId);
     }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_dolby_android_alps_alpsnative_AlpsNativeImpl_setPresentationsChangedCallback(JNIEnv *env,
-                                                                                     jobject thiz,
-                                                                                     jobject callback) {
+Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_setPresentationsChangedCallback(JNIEnv *env,
+                                                                                         jobject thiz,
+                                                                                         jlong alpsHandle,
+                                                                                         jobject callback) {
     std::lock_guard<std::mutex> lock(mtx);
-    env->GetJavaVM(&globalJavaVM);
-
-    if (presChangedCallbackKotlin != nullptr) {
-        env->DeleteGlobalRef(presChangedCallbackKotlin);
-    }
-    presChangedCallbackKotlin = env->NewGlobalRef(callback);
+    auto *alps = (alps_ctx*)(uintptr_t)alpsHandle;
 
     alps_set_presentations_changed_callback(
-            ctx,
+            alps,
             presentationChangedCallback,
-            nullptr
+            env->NewGlobalRef(callback)
     );
 }

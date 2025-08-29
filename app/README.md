@@ -7,6 +7,7 @@ introduce any custom changes to Media3.
 - [App configuration](#app-configuration)
 - [DRM](#drm-content)
 - [Dialog Enhancement](#dialog-enhancement)
+- [Known issues](#known-issues)
 
 ## Installation
 Dolby doesn't provide built version of sample app. It is desired to be an integration example code. 
@@ -81,3 +82,10 @@ The assumptions regarding AC-4 stream are:
 <img src="../docs/images/de_level2_visualization.png" width=200 />
 
 - Total amount of presentations should be between 2 and 6 - result of previous assumptions.
+
+## Known issues
+
+### Content Limitations
+The ALPS library has been tested using **CMAF (Common Media Application Format)** compliant content.
+Using the ALPS library with content that uses features beyond the standardized CMAF feature
+subset may cause unexpected behavior.

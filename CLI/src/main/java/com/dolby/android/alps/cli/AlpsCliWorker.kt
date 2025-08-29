@@ -72,7 +72,7 @@ class AlpsCliWorker(
                 }
             }
 
-            alps.close()
+            alps.release()
             Napier.i("ALPS CLI processing success. Output files saved in ${outputFilesDir.path}")
             return Result.success()
         } catch (e: Exception) {

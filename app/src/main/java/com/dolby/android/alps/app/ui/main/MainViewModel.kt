@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -122,9 +123,14 @@ class MainViewModel(
             val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra(IntentUtil.PRESENTATION_CHANGE_STYLE_EXTRA, content.presentationChangeStyle?.toString())
 
-            IntentUtil.addMediaItemToIntent(mediaItem.build(), intent)
+            viewModelScope.launch {
+                val isAlpsEnabled = repository.getIsAlpsEnabled().first()
+                intent.putExtra(IntentUtil.IS_ALPS_ENABLED, isAlpsEnabled)
 
-            startActivityCallback(intent)
+                IntentUtil.addMediaItemToIntent(mediaItem.build(), intent)
+
+                startActivityCallback(intent)
+            }
         } else {
             viewModelScope.launch {
                 _errorEvent.emit(ErrorEvent.MissingManifestPath)

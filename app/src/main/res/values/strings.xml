@@ -32,4 +32,6 @@
 
     <!-- Settings dialog-->
     <string name="app_version_info">Version %1$s</string>
+    <string name="enable_alps">Enable ALPS</string>
+
 </resources>

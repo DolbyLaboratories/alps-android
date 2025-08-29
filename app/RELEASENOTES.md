@@ -1,5 +1,20 @@
 # Release notes
 
+
+## 1.1.0 (2025-07-14)
+
+* New features:
+  * Supports multi-period DASH content
+  * ALPS
+    * Uses ALPS for Android v1.1.0
+    * Added AlpsManager usage example
+
+
+
+## 1.0.1 (2024-12-03)
+* New features:
+  * Added setting to disable ALPS
+
 ## 1.0.0 (2024-11-14)
 * New features:
   * ALPS

@@ -30,23 +30,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dolby.android.alps.app.R
 import com.dolby.android.alps.app.databinding.PresentationsListDialogBinding
 import com.dolby.android.alps.app.ui.base.BaseDialog
-import com.dolby.android.alps.models.Presentation
+import com.dolby.android.alps.samples.models.AlpsPresentationWrapper
 
 class PresentationsListDialog(
-    private val presentationsList: List<Presentation>,
-    private var selectedPresentation: Presentation,
+    private var presentationsList: List<AlpsPresentationWrapper>,
 ): BaseDialog() {
     companion object {
         var myProvider: PropertyProvider? = null
 
-        fun getDefaultDialogProvider(action: ((Presentation) -> Unit)): PropertyProvider {
+        fun getDefaultDialogProvider(action: ((AlpsPresentationWrapper) -> Unit)): PropertyProvider {
             return object : PropertyProvider {
-                override val onPresentationSelected: ((Presentation) -> Unit)
+                override val onPresentationSelected: ((AlpsPresentationWrapper) -> Unit)
                     get() = action
             }
         }
@@ -73,16 +71,14 @@ class PresentationsListDialog(
         return R.style.FullScreenDialog
     }
 
-    fun updateSelectedPresentation(presentation: Presentation) {
-        selectedPresentation = presentation
-        presentationsAdapter?.updateSelectedPresentation(selectedPresentation)
+    fun updatePresentations(presentationsList: List<AlpsPresentationWrapper>) {
+        this.presentationsList = presentationsList
+        presentationsAdapter?.updatePresentations(presentationsList)
     }
 
     override fun setupUI() {
         presentationsAdapter = PresentationsRecyclerViewAdapter(
             presentationsList,
-            selectedPresentation,
-            lifecycleScope
         ) { presentation ->
             myProvider?.onPresentationSelected?.let { it(presentation) }
         }
@@ -99,6 +95,6 @@ class PresentationsListDialog(
     }
 
     interface PropertyProvider {
-        val onPresentationSelected: ((Presentation) -> Unit)
+        val onPresentationSelected: ((AlpsPresentationWrapper) -> Unit)
     }
 }

@@ -37,9 +37,6 @@ import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.NoOpCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
-import com.dolby.android.alps.Alps
-import com.dolby.android.alps.samples.AlpsHttpDataSource
-import com.dolby.android.alps.samples.utils.Ac4DataSourceDetector
 import java.io.File
 import java.net.CookieHandler
 import java.net.CookieManager
@@ -50,32 +47,11 @@ class DataSourceUtil {
     companion object {
         private const val DOWNLOAD_CONTENT_DIRECTORY = "downloads"
 
-
         private var dataSourceFactory: DataSource.Factory? = null
         private var httpDataSourceFactory: DataSource.Factory? = null
         private var downloadCache: Cache? = null
         private var downloadDirectory: File? = null
         private var databaseProvider: DatabaseProvider? = null
-
-        fun getAlpsDataSourceFactory(
-            context: Context,
-            alpsHttpDataSourceFactory: DataSource.Factory
-        ): DataSource.Factory {
-            val appContext = context.applicationContext
-            val upstreamFactory = DefaultDataSource.Factory(appContext, alpsHttpDataSourceFactory)
-            return buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache(context))
-        }
-
-        fun getAlpsHttpDataSourceFactory(
-            alps: Alps,
-            ac4DataSourceDetector: Ac4DataSourceDetector
-        ): AlpsHttpDataSource.Factory {
-            return AlpsHttpDataSource.Factory(
-                alps,
-                ac4DataSourceDetector,
-                DefaultHttpDataSource.Factory(),
-            )
-        }
 
         fun getDataSourceFactory(context: Context): DataSource.Factory {
             val appContext = context.applicationContext

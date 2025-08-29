@@ -32,5 +32,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AppSettings(
     @SerialName("contentListURL")
-    val contentListUrl: String
+    val contentListUrl: String,
 )

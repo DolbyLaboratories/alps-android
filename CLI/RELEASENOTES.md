@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.1.0 (2025-07-14)
+
+* Features:
+  * Uses ALPS for Android v.1.1.0
+
+
 ## 1.0.0 (2024-11-14)
 * Features:
   * Uses ALPS for Android v1.0.0

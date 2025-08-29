@@ -36,6 +36,8 @@ sealed class AlpsException(
      * AlpsException.Undefined() is thrown in scenarios that should never happen.
      */
     class Undefined : AlpsException("ALPS: Undefined exception reason")
+
+    class NotInitialized : AlpsException("ALPS object not initialized")
     /**
      * AlpsException.Native sealed class groups all Exceptions that represent ALPS Native library
      * error codes - see alps_ret enum.

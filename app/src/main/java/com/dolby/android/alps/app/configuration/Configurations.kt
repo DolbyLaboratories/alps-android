@@ -32,13 +32,15 @@ import com.dolby.android.alps.app.data.models.AppSettings
 interface Configurations {
     val settingsJsonUrl: String
     val appSettings: AppSettings
+    val isAlpsEnabled: Boolean
 }
 
 class AppConfigurations: Configurations {
     override val settingsJsonUrl = BuildConfig.SETTINGS_URL
+    override val isAlpsEnabled = true
 
     override val appSettings: AppSettings =
         AppSettings(
-            contentListUrl = BuildConfig.CONTENT_URL
+            contentListUrl = BuildConfig.CONTENT_URL,
         )
 }

@@ -27,7 +27,8 @@
 package com.dolby.android.alps
 
 import com.dolby.android.alps.alpsnative.AlpsNative
-import com.dolby.android.alps.alpsnative.AlpsNativeImpl
+import com.dolby.android.alps.alpsnative.DefaultAlpsNative
+import com.dolby.android.alps.alpsnative.AlpsNativeInfo
 import com.dolby.android.alps.logger.AlpsLoggerProvider
 import com.dolby.android.alps.models.Presentation
 import com.dolby.android.alps.utils.AlpsException
@@ -47,13 +48,13 @@ import java.nio.ByteBuffer
  * * close ALPS library
  *
  * @param alpsNative object implementing [AlpsNative] interface.
- * Recommended to **use default value** [AlpsNativeImpl].
+ * Recommended to **use default value** [DefaultAlpsNative].
  *
- * @constructor Queries memory for native ALPS library, initializes it and creates ALPS object.
+ * @constructor Tries to initialize alpsNative object.
  * @throws AlpsException if querying memory, allocating it or initializing native library failed.
  */
 class Alps(
-    private val alpsNative: AlpsNative = AlpsNativeImpl()
+    private val alpsNative: AlpsNative = DefaultAlpsNative()
 ) {
     companion object {
         /**
@@ -63,31 +64,25 @@ class Alps(
         fun getVersion(): String {
             return BuildConfig.ALPS_VERSION
         }
-    }
 
-    init {
-        AlpsLoggerProvider.i(
-            "ALPS library initialized. Android library version: ${getVersion()}. " +
-                    "Native library version: ${alpsNative.getVersion()}")
-
-        try {
-            if (alpsNative.queryMem() == -1L) {
-                throw AlpsException.Undefined()
-            }
-            alpsNative.initialize()
-        } catch (e: AlpsException) {
-            close()
-            throw e
+        /**
+         * Returns version of the native ALPS library.
+         * @return version of native ALPS library.
+         */
+        fun getNativeLibraryVersion(): String {
+            return AlpsNativeInfo.getVersion()
         }
     }
 
+    init {
+        alpsNative.initialize()
+    }
+
     /**
-     * Closes native library.
-     *
-     * This includes destroying native context and freeing allocated memory.
+     * Release resources. Must be called when object is no longer needed.
      */
-    fun close() {
-        alpsNative.destroy()
+    fun release() {
+        alpsNative.release()
     }
 
     /**
@@ -107,9 +102,12 @@ class Alps(
      * limited to light operations!
      *
      * @param callback callback function that will be invoked whenever presentations list change
+     * @throws AlpsException.NotInitialized if Alps object is not initialized
      */
     fun setPresentationsChangedCallback(callback: PresentationsChangedCallback) {
-        alpsNative.setPresentationsChangedCallback(callback)
+        ifInitialized {
+            alpsNative.setPresentationsChangedCallback(callback)
+        }
     }
 
     /**
@@ -123,9 +121,12 @@ class Alps(
      *
      * @param segmentBuf fragmented MP4 segment bytes. **Must be direct.**
      * @throws AlpsException.Native if processing failed
+     * @throws AlpsException.NotInitialized if Alps object is not initialized
      */
     fun processIsobmffSegment(segmentBuf: ByteBuffer) {
-        alpsNative.processIsobmffSegment(segmentBuf)
+        ifInitialized {
+            alpsNative.processIsobmffSegment(segmentBuf)
+        }
     }
 
     /**
@@ -135,20 +136,26 @@ class Alps(
      * matching presentation.
      *
      * @throws AlpsException.Native if getting presentations failed
+     * @throws AlpsException.NotInitialized if Alps object is not initialized
      * @return list of [Presentation] if at least one was detected, [emptyList] otherwise
      */
     fun getPresentations(): List<Presentation> {
-        return alpsNative.getPresentations() ?: emptyList()
+        return ifInitialized {
+            alpsNative.getPresentations() ?: emptyList()
+        }
     }
 
     /**
      * Fetches active presentation ID.
      *
      * @throws AlpsException.Native if getting active presentation ID failed
+     * @throws AlpsException.NotInitialized if Alps object is not initialized
      * @return ID of active presentation, -1 if unset
      */
     fun getActivePresentationId(): Int {
-        return alpsNative.getActivePresentationId()
+        return ifInitialized {
+            alpsNative.getActivePresentationId()
+        }
     }
 
     /**
@@ -160,8 +167,21 @@ class Alps(
      * @param presentationId ID of desired active presentation, set to -1 to skip processing and use
      * device default
      * @throws AlpsException.Native if setting failed
+     * @throws AlpsException.NotInitialized if Alps object is not initialized
      */
     fun setActivePresentationId(presentationId: Int) {
-        alpsNative.setActivePresentationId(presentationId)
+        return ifInitialized {
+            alpsNative.setActivePresentationId(presentationId)
+        }
+    }
+
+    private fun <T>ifInitialized(
+        block: () -> T
+    ): T {
+        return if (alpsNative.isInitialized()) {
+            block.invoke()
+        } else {
+            throw AlpsException.NotInitialized()
+        }
     }
 }

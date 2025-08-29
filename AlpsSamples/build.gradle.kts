@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":AlpsCore"))
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.kotlinx.coroutines.core)
 
     //Tests
     testImplementation(libs.jupiter.api)

@@ -41,9 +41,12 @@ import kotlinx.serialization.json.Json
 interface LocalDataSource {
     fun getAppSettingsUrl(): Flow<String>
     suspend fun updateAppSettingsUrl(url: String?)
+    fun getIsAlpsEnabled(): Flow<Boolean>
+    suspend fun setIsAlpsEnabled(isAlpsEnabled: Boolean?)
 }
 
 private val SETTINGS_URL = stringPreferencesKey("settings_url")
+private val IS_ALPS_ENABLED = stringPreferencesKey("is_alps_enabled")
 
 class PreferencesDataSource(
     private val context: Context,
@@ -90,6 +93,14 @@ class PreferencesDataSource(
 
     override suspend fun updateAppSettingsUrl(url: String?) {
         saveOrRemoveIfNull(SETTINGS_URL, url)
+    }
+
+    override fun getIsAlpsEnabled(): Flow<Boolean> =
+        getModelFlowFromJsonString<Boolean>(IS_ALPS_ENABLED)
+            .map { it ?: defaultConfiguration.isAlpsEnabled }
+
+    override suspend fun setIsAlpsEnabled(isAlpsEnabled: Boolean?) {
+        saveOrRemoveIfNull(IS_ALPS_ENABLED, isAlpsEnabled)
     }
 
 }

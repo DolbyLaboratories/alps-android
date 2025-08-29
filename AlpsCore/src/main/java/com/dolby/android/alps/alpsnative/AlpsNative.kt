@@ -34,39 +34,29 @@ import java.nio.ByteBuffer
 /**
  * AlpsNative interface - defines usage of Native ALPS library.
  *
- * The default implementation is [AlpsNativeImpl].
+ * The default implementation is [DefaultAlpsNative].
  */
 interface AlpsNative {
     /**
-     * Fetches Alps Native library version string.
+     * Creating Native object includes querying memory size required by native library, trying
+     * to allocate it and initialize native object.
      *
-     * @return version string
-     */
-    fun getVersion(): String
-
-    /**
-     * Queries memory size required by native library and tries to allocate it.
-     *
-     * @throws AlpsException.Native if memory querying failed
+     * @throws AlpsException.Native if memory querying or initializing failed
      * @throws AlpsException.JNI if memory allocating failed
-     * @return size of allocated memory if success, -1 otherwise
-     */
-    fun queryMem(): Long
-
-    /**
-     * Initializes native library context object, using memory allocated by [queryMem] call.
-     *
-     * [queryMem] needs to be called successfully before
-     * @see queryMem
-     * @throws AlpsException.Native if initializing failed
-     * @throws AlpsException.JNI if memory was not allocated before
      */
     fun initialize()
 
     /**
-     * Destroys native library context object and frees allocated memory.
+     * Release resources. Must be called when object is no longer needed.
      */
-    fun destroy()
+    fun release()
+
+    /**
+     * Checks whether AlpsNative is initialized.
+     *
+     * @return true if initialized, false otherwise
+     */
+    fun isInitialized(): Boolean
 
     /**
      * Sets presentations list changed callback.

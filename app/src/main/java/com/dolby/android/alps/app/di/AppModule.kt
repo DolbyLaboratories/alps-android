@@ -35,6 +35,7 @@ import com.dolby.android.alps.app.data.datasource.network.NetworkDataSourceImpl
 import com.dolby.android.alps.app.data.repository.UserDataRepository
 import com.dolby.android.alps.app.data.repository.UserDataRepositoryImpl
 import com.dolby.android.alps.app.ui.main.MainViewModel
+import com.dolby.android.alps.app.ui.settings.SettingsDialogViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -71,4 +72,5 @@ val appModule = module {
     }
 
     viewModel { MainViewModel( get() )}
+    viewModel { SettingsDialogViewModel( get() )}
 }

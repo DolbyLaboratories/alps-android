@@ -39,6 +39,7 @@ class IntentUtil {
         const val ACTION_VIEW = "com.dolby.android.alps.app.action.VIEW"
 
         const val PRESENTATION_CHANGE_STYLE_EXTRA = "presentation_change_style"
+        const val IS_ALPS_ENABLED = "is_alps_enabled"
 
         private const val TITLE_EXTRA = "title"
         private const val DESCRIPTION_EXTRA = "description"

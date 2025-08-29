@@ -31,26 +31,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dolby.android.alps.app.R
 import com.dolby.android.alps.app.databinding.PresentationItemLayoutBinding
-import com.dolby.android.alps.models.Presentation
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+import com.dolby.android.alps.samples.models.AlpsPresentationWrapper
 
 class PresentationsRecyclerViewAdapter(
-    private val presentations: List<Presentation>,
-    private var selectedPresentation: Presentation,
-    private val externalScope: CoroutineScope,
-    private val onPresentationClick: (Presentation) -> Unit
+    private var presentations: List<AlpsPresentationWrapper>,
+    private val onPresentationClick: (AlpsPresentationWrapper) -> Unit
 ): RecyclerView.Adapter<PresentationsRecyclerViewAdapter.ViewHolder>() {
-    private val _selectedPresentationFlow = MutableSharedFlow<Presentation>(replay = 1)
-    private val selectedPresentationFlow = _selectedPresentationFlow.asSharedFlow()
 
-    fun updateSelectedPresentation(presentation: Presentation) {
-        selectedPresentation = presentation
-        externalScope.launch {
-            _selectedPresentationFlow.emit(selectedPresentation)
-        }
+    fun updatePresentations(presentations: List<AlpsPresentationWrapper>) {
+        this.presentations = presentations
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -67,14 +57,14 @@ class PresentationsRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(
-            presentation = presentations[position],
-            isSelected = presentations[position] == selectedPresentation)
+            presentation = presentations[position]
+        )
     }
 
     inner class ViewHolder(
         private val binding: PresentationItemLayoutBinding,
     ): RecyclerView.ViewHolder(binding.root) {
-        private lateinit var presentation: Presentation
+        private lateinit var presentation: AlpsPresentationWrapper
         init {
             binding.root.apply {
                 requestFocus()
@@ -82,28 +72,16 @@ class PresentationsRecyclerViewAdapter(
                     onPresentationClick(presentation)
                 }
             }
-            externalScope.launch {
-                selectedPresentationFlow.collect {
-                    binding.selectionIcon.setImageResource(
-                        if (it == presentation) {
-                            R.drawable.ic_selected
-                        } else {
-                            R.drawable.ic_selectable
-                        }
-                    )
-                }
-            }
         }
 
         fun bind(
-            presentation: Presentation,
-            isSelected: Boolean,
+            presentation: AlpsPresentationWrapper
         ) {
             this.presentation = presentation
             binding.apply {
                 label.text = presentation.label
                 selectionIcon.setImageResource(
-                    if (isSelected) {
+                    if (presentation.isActive) {
                         R.drawable.ic_selected
                     } else {
                         R.drawable.ic_selectable

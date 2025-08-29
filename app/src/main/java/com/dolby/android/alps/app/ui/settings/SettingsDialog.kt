@@ -32,13 +32,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.lifecycle.lifecycleScope
 import com.dolby.android.alps.app.BuildConfig
 import com.dolby.android.alps.app.R
 import com.dolby.android.alps.app.databinding.SettingsDialogBinding
 import com.dolby.android.alps.app.ui.base.BaseDialog
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsDialog: BaseDialog() {
+class SettingsDialog : BaseDialog() {
     private var binding: SettingsDialogBinding? = null
+    private val viewModel by viewModel<SettingsDialogViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +59,10 @@ class SettingsDialog: BaseDialog() {
         dimBehind()
         val window: Window? = dialog!!.window
         window?.apply {
-            setLayout(resources.getDimension(R.dimen.settings_dialog_width).toInt(), ViewGroup.LayoutParams.MATCH_PARENT)
+            setLayout(
+                resources.getDimension(R.dimen.settings_dialog_width).toInt(),
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
             setGravity(Gravity.START)
             setWindowAnimations(R.style.DialogAnimationSideSlide)
         }
@@ -62,6 +70,14 @@ class SettingsDialog: BaseDialog() {
 
     override fun setupUI() {
         binding?.apply {
+            lifecycleScope.launch {
+                viewModel.isAlpsEnabled.filterNotNull().collect { value ->
+                    isAlpsEnabledCheckbox.isChecked = value
+                }
+            }
+            isAlpsEnabledCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onAlpsEnableCheckboxChanged(isChecked)
+            }
             appVersion.text = getString(R.string.app_version_info, BuildConfig.VERSION_NAME)
         }
     }

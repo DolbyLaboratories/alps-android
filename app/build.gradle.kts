@@ -35,7 +35,7 @@ android {
             keyAlias = "debugKey"
             keyPassword = "HvVe26c5ss%87Cd3n#Vf"
             storeFile = file("../keys/debugKey.jks")
-            storePassword ="HvVe26c5ss%87Cd3n#Vf"
+            storePassword = "HvVe26c5ss%87Cd3n#Vf"
         }
     }
 

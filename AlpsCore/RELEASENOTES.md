@@ -1,5 +1,14 @@
 # Release notes
 
+## 1.1.0 (2025-07-14)
+
+Based on ALPS Native v1.1.0
+
+* Features:
+  * Support for multiple ALPS objects
+
+
+
 ## 1.0.0 (2024-11-14)
 ALPS LA RC#1
 

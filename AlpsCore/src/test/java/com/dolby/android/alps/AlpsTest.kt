@@ -58,23 +58,20 @@ class AlpsTest {
         }
 
         @Test
-        fun `Exception thrown and nativeDestroy called if nativeQueryMemory failed`() {
+        fun `Exception thrown if native create failed during alps_query_mem`() {
             val mockedAlpsNative = getMockedAlpsNative(
-                queryMemoryResponse = -1L
+                nativeInitializeException = AlpsException.Native.Undefined()
             )
 
             val exception = assertThrows<AlpsException>{
                 alps = Alps(mockedAlpsNative)
             }
-            assertThat(exception.message).isEqualTo(AlpsException.Undefined().message)
-            verify(exactly = 1) {
-                mockedAlpsNative.destroy()
-            }
+            assertThat(exception.message).isEqualTo(AlpsException.Native.Undefined().message)
         }
 
         @Test
-        fun `Exception thrown and nativeDestroy called if nativeInitialize failed`() {
-            val nativeException = AlpsException.Native.Undefined()
+        fun `Exception thrown if native create failed during alps_init`() {
+            val nativeException = AlpsException.Native.BuffTooSmall()
             val mockedAlpsNative = getMockedAlpsNative(
                 nativeInitializeException = nativeException
             )
@@ -83,20 +80,17 @@ class AlpsTest {
                 alps = Alps(mockedAlpsNative)
             }
             assertThat(exception).isEqualTo(nativeException)
-            verify(exactly = 1) {
-                mockedAlpsNative.destroy()
-            }
         }
 
         @Test
-        fun `close calls nativeDestroy`() {
+        fun `release calls native release`() {
             val mockedAlpsNative = getMockedAlpsNative()
             alps = Alps(mockedAlpsNative)
 
-            alps.close()
+            alps.release()
 
             verify(exactly = 1) {
-                mockedAlpsNative.destroy()
+                mockedAlpsNative.release()
             }
         }
     }
@@ -212,14 +206,14 @@ class AlpsTest {
 }
 
 private fun getMockedAlpsNative(
-    queryMemoryResponse: Long = 100L,
+    isInitializedResponse: Boolean = true,
     nativeInitializeException: AlpsException? = null,
     nativeProcessBufferException: AlpsException? = null,
     nativeGetPresentationsResponse: List<Presentation>? = emptyList(),
     nativeGetActivePresentationIdResponse: Int = 0,
     nativeSetActivePresentationIdException: AlpsException? = null,
 ) = mockk<AlpsNative>(relaxed = true) {
-        every { queryMem() } returns queryMemoryResponse
+        every { isInitialized() } returns isInitializedResponse
         nativeInitializeException?.let { every { initialize() } throws it }
         nativeProcessBufferException?.let { every { processIsobmffSegment(any()) } throws it }
         every { getPresentations() } returns nativeGetPresentationsResponse

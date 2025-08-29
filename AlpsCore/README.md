@@ -8,6 +8,7 @@ AlpsCore module includes core ALPS library functionality.
 - [Logging](#logging)
 - [AC-4 content requirements](#ac-4-content-requirements)
 - [Buffer management](#buffer-management)
+- [Known issues](#known-issues)
 
 ## Installation
 ALPS library is not published on Maven Central or other central repository. So to use it, there are 
@@ -35,8 +36,10 @@ val alps = Alps().apply {
     })
 }
 ```
+**Alps object should be used for single period of content.** For multi-period content, multiple
+instances of Alps should be used. 
 
-ALPS processes memory buffers that contain ISO BMFF segment data. These buffers are typically the 
+Alps processes memory buffers that contain ISO BMFF segment data. These buffers are typically the 
 result of network requests performed by the media player. After the player has downloaded the ISO 
 BMFF segment data, data is processed using the ALPS method 'processIsobmffSegment'. The processed 
 data is then returned to the media player for forwarding to the decoder. Integration with the media 
@@ -128,3 +131,10 @@ private fun flushBuffer() {
 ```
 This workaround is far from optimal, so it is recommended to implement buffer flushing mechanism
 accordingly to player/application implementation to optimize switching presentation.
+
+## Known issues
+
+### Content Limitations
+The ALPS library has been tested using **CMAF (Common Media Application Format)** compliant content.
+Using the ALPS library with content that uses features beyond the standardized CMAF feature
+subset may cause unexpected behavior.

@@ -39,6 +39,8 @@ interface UserDataRepository {
     suspend fun getAppSettings(): AppSettings
     suspend fun getAppSettingsUrl(): Flow<String>
     suspend fun updateAppSettingsUrl(url: String?)
+    suspend fun getIsAlpsEnabled(): Flow<Boolean>
+    suspend fun setIsAlpsEnabled(isAlpsEnabled: Boolean?)
 }
 
 class UserDataRepositoryImpl(
@@ -59,8 +61,14 @@ class UserDataRepositoryImpl(
     override suspend fun getAppSettingsUrl(): Flow<String> =
         localDataSource.getAppSettingsUrl()
 
-
     override suspend fun updateAppSettingsUrl(url: String?) {
         localDataSource.updateAppSettingsUrl(url)
+    }
+
+    override suspend fun getIsAlpsEnabled(): Flow<Boolean> =
+        localDataSource.getIsAlpsEnabled()
+
+    override suspend fun setIsAlpsEnabled(isAlpsEnabled: Boolean?) {
+        localDataSource.setIsAlpsEnabled(isAlpsEnabled)
     }
 }

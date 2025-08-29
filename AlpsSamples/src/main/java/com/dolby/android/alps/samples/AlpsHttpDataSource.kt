@@ -33,32 +33,28 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.HttpDataSource
 import com.dolby.android.alps.Alps
-import com.dolby.android.alps.samples.utils.Ac4DataSourceDetector
 
 /**
- * AlpsHttpDataSource is a sample class that allows easy integration of ALPS library with Exoplayer.
+ * [AlpsHttpDataSource] is a helper class that intercepts [defaultHttpDataSource] calls and adds
+ * [Alps] processing.
  *
  * AlpsHttpDataSource is an alternative for DefaultHttpDataSource. It adds ALPS library processing
  * on top of DefaultHttpDataSource (or other implementation of HttpDataSource interface) operations.
  *
- * Actual job of AlpsHttpDataSource is to decide whether ALPS library processing should be applied
- * to currently processed data source, and the processing is hidden [AlpsProcessing] object.
- * Exoplayer will use this HttpDataSource to download not only AC-4 audio stream, but also video
- * stream and other audio streams that ALPS library should not process. [AlpsHttpDataSource] decides
- * whether it should pass data to [AlpsProcessing] or not, using injected implementation of
- * [Ac4DataSourceDetector] interface.
+ * AlpsHttpDataSource should only be used for AC-4 audio streams data sources.
+ * For DASH content, use [AlpsDashChunkSourceFactory], which can decide whether [AlpsHttpDataSource]
+ * should be used for specific chunk.
+ *
+ * Actual ALPS processing is extracted to [AlpsProcessing] object.
  *
  * @param alps [Alps] object that will be used for ALPS processing of AC-4 sources
- * @param ac4DataSourceDetector [Ac4DataSourceDetector] implementation that is used to decide
- * whether source is AC-4
  * @param defaultHttpDataSource [HttpDataSource] implementation, can be Default or some custom if
  * needed. Used for data downloading.
  */
 @UnstableApi
 class AlpsHttpDataSource(
     alps: Alps,
-    private val ac4DataSourceDetector: Ac4DataSourceDetector,
-    private val defaultHttpDataSource: HttpDataSource
+    private val defaultHttpDataSource: HttpDataSource,
 ): BaseDataSource(true), HttpDataSource {
     /**
      * Factory class for [AlpsHttpDataSource].
@@ -66,45 +62,29 @@ class AlpsHttpDataSource(
      * Used by Exoplayer to create [AlpsHttpDataSource] objects.
      *
      * @param alps [Alps] object that will be passed to [AlpsHttpDataSource]
-     * @param ac4DataSourceDetector [Ac4DataSourceDetector] implementation that is passed to
-     * [AlpsHttpDataSource]
      * @param defaultHttpDataSourceFactory used to create [HttpDataSource] implementation objects
      * that will be used in [AlpsHttpDataSource]
      */
     class Factory(
         private val alps: Alps,
-        private val ac4DataSourceDetector: Ac4DataSourceDetector,
         private val defaultHttpDataSourceFactory: HttpDataSource.Factory,
     ): DataSource.Factory {
         override fun createDataSource(): DataSource {
             return AlpsHttpDataSource(
                 alps,
-                ac4DataSourceDetector,
-                defaultHttpDataSourceFactory.createDataSource()
+                defaultHttpDataSourceFactory.createDataSource(),
             )
         }
     }
     private val alpsProcessing = AlpsProcessing(alps, defaultHttpDataSource)
-    private var shouldProcess: Boolean? = null
 
     override fun open(dataSpec: DataSpec): Long {
-        if (shouldProcess == null) {
-            /* Based on the init segment URI - detect AC4 data source */
-            shouldProcess = ac4DataSourceDetector.isAc4DataSource(dataSpec.uri)
-        }
-        return if (shouldProcess == true) {
-            alpsProcessing.open(dataSpec)
-        } else {
-            defaultHttpDataSource.open(dataSpec)
-        }
+        return alpsProcessing.open(dataSpec)
+
     }
 
     override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
-        return if (shouldProcess == true) {
-            alpsProcessing.read(buffer, offset, length)
-        } else {
-            defaultHttpDataSource.read(buffer, offset, length)
-        }
+        return alpsProcessing.read(buffer, offset, length)
     }
 
     // Below methods don't need custom implementation

@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        Napier.i("ALPS library linked. Version: ${Alps.Companion.getVersion()}")
+        Napier.i("Android ALPS Version: ${Alps.getVersion()}; " +
+                "Native ALPS version: ${Alps.getNativeLibraryVersion()}")
     }
 }

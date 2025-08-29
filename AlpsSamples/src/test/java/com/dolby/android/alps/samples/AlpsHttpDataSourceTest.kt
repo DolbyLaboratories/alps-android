@@ -32,15 +32,12 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.dolby.android.alps.Alps
-import com.dolby.android.alps.samples.utils.Ac4DataSourceDetector
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 
 class AlpsHttpDataSourceTest {
     companion object {
@@ -54,34 +51,9 @@ class AlpsHttpDataSourceTest {
     @Nested
     inner class OpenMethod {
         @Test
-        fun `isAc4DataSource called only for first open call`() {
-            val mockedDetector = getMockedAc4DataSourceDetector()
-            val mockedDataSpec = getMockedDataSpec()
+        fun `open returns same value as defaultHttpDataSource`() {
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                mockedDetector,
-                getMockedDefaultHttpDataSourceFactory()
-            )
-
-            alpsHttpDataSource.open(mockedDataSpec)
-            alpsHttpDataSource.open(mockedDataSpec)
-
-            verify(exactly = 1) {
-                mockedDetector.isAc4DataSource(mockedDataSpec.uri)
-            }
-        }
-
-        @ParameterizedTest(name = "{0}")
-        @CsvSource("off, false", "on, true")
-        fun `open returns same value as defaultHttpDataSource when alps processing is`(
-            alpsProcessing: String,
-            isAc4DataSourceResult: Boolean
-        ) {
-            alpsHttpDataSource = createAlpsHttpDataSource(
-                getMockedAlps(),
-                getMockedAc4DataSourceDetector(
-                    isAc4DataSourceResult = isAc4DataSourceResult
-                ),
                 getMockedDefaultHttpDataSourceFactory(
                     getMockedDefaultHttpDataSource(
                         openReturnValue = EXAMPLE_SEGMENT_SIZE
@@ -98,32 +70,6 @@ class AlpsHttpDataSourceTest {
     @Nested
     inner class ReadMethod {
         @Test
-        fun `alps processing not used when ac4DataSource was not detected`() {
-            val mockedDefaultHttpDataSource = getMockedDefaultHttpDataSource(
-                openReturnValue = EXAMPLE_SEGMENT_SIZE,
-            )
-            val fakeBuffer = ByteArray(EXAMPLE_SEGMENT_SIZE.toInt())
-            val fakeOffset = 0
-            val fakeLength = EXAMPLE_SINGLE_READ_LENGTH
-            alpsHttpDataSource = createAlpsHttpDataSource(
-                getMockedAlps(),
-                getMockedAc4DataSourceDetector(
-                    isAc4DataSourceResult = false
-                ),
-                getMockedDefaultHttpDataSourceFactory(
-                    mockedDefaultHttpDataSource
-                )
-            )
-
-            alpsHttpDataSource.open(getMockedDataSpec())
-            alpsHttpDataSource.read(fakeBuffer, fakeOffset, fakeLength)
-
-            verify(exactly = 1) {
-                mockedDefaultHttpDataSource.read(fakeBuffer, fakeOffset, fakeLength)
-            }
-        }
-
-        @Test
         fun `alps processing used when ac4DataSource was detected`() {
             val mockedDefaultHttpDataSource = getMockedDefaultHttpDataSource(
                 openReturnValue = EXAMPLE_SEGMENT_SIZE,
@@ -131,9 +77,6 @@ class AlpsHttpDataSourceTest {
             )
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(
-                    isAc4DataSourceResult = true
-                ),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -159,9 +102,6 @@ class AlpsHttpDataSourceTest {
             val fakeLength = EXAMPLE_SINGLE_READ_LENGTH
             alpsHttpDataSource = createAlpsHttpDataSource(
                 mockedAlps,
-                getMockedAc4DataSourceDetector(
-                    isAc4DataSourceResult = true
-                ),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -199,9 +139,6 @@ class AlpsHttpDataSourceTest {
             val fakeLength = EXAMPLE_SINGLE_READ_LENGTH
             alpsHttpDataSource = createAlpsHttpDataSource(
                 mockedAlps,
-                getMockedAc4DataSourceDetector(
-                    isAc4DataSourceResult = true
-                ),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -239,7 +176,6 @@ class AlpsHttpDataSourceTest {
             )
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -258,7 +194,6 @@ class AlpsHttpDataSourceTest {
             val mockedDefaultHttpDataSource = getMockedDefaultHttpDataSource()
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -279,7 +214,6 @@ class AlpsHttpDataSourceTest {
             )
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -300,7 +234,6 @@ class AlpsHttpDataSourceTest {
             val mockedDefaultHttpDataSource = getMockedDefaultHttpDataSource()
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -319,7 +252,6 @@ class AlpsHttpDataSourceTest {
             val mockedDefaultHttpDataSource = getMockedDefaultHttpDataSource()
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -337,7 +269,6 @@ class AlpsHttpDataSourceTest {
             val mockedDefaultHttpDataSource = getMockedDefaultHttpDataSource()
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -358,7 +289,6 @@ class AlpsHttpDataSourceTest {
             )
             alpsHttpDataSource = createAlpsHttpDataSource(
                 getMockedAlps(),
-                getMockedAc4DataSourceDetector(),
                 getMockedDefaultHttpDataSourceFactory(
                     mockedDefaultHttpDataSource
                 )
@@ -375,24 +305,16 @@ class AlpsHttpDataSourceTest {
 
     private fun createAlpsHttpDataSource(
         alps: Alps,
-        detector: Ac4DataSourceDetector,
         defaultHttpDataSourceFactory: DefaultHttpDataSource.Factory,
     ): AlpsHttpDataSource {
         return AlpsHttpDataSource.Factory(
             alps,
-            detector,
             defaultHttpDataSourceFactory,
         ).createDataSource() as? AlpsHttpDataSource
             ?: throw Exception("AlpsHttpDataSource creation failed")
     }
 
     private fun getMockedAlps() = mockk<Alps>(relaxed = true)
-
-    private fun getMockedAc4DataSourceDetector(
-        isAc4DataSourceResult: Boolean = true
-    ) = mockk<Ac4DataSourceDetector>(relaxed = true) {
-        every { isAc4DataSource(any()) } returns isAc4DataSourceResult
-    }
 
     private fun getMockedDataSpec() = DataSpec(mockk<Uri>(relaxed = true))
 

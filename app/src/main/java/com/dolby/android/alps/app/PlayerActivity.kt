@@ -28,12 +28,14 @@ package com.dolby.android.alps.app
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.session.PlaybackState
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -45,17 +47,17 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.RenderersFactory
+import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.dash.manifest.DashManifest
 import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
 import androidx.media3.exoplayer.drm.FrameworkMediaDrm
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.util.EventLogger
-import com.dolby.android.alps.Alps
-import com.dolby.android.alps.PresentationsChangedCallback
 import com.dolby.android.alps.app.data.models.PresentationChangeStyle
 import com.dolby.android.alps.app.databinding.ActivityPlayerBinding
 import com.dolby.android.alps.app.ui.player.DialogEnhancementDialog
@@ -63,32 +65,27 @@ import com.dolby.android.alps.app.ui.player.PlayerErrorMessageProvider
 import com.dolby.android.alps.app.ui.player.PresentationsListDialog
 import com.dolby.android.alps.app.utils.DataSourceUtil
 import com.dolby.android.alps.app.utils.IntentUtil
-import com.dolby.android.alps.models.Presentation
-import com.dolby.android.alps.models.hasChanged
-import com.dolby.android.alps.samples.AlpsHttpDataSource
-import com.dolby.android.alps.samples.utils.DashManifestAc4DataSourceDetector
+import com.dolby.android.alps.samples.AlpsDashChunkSourceFactory
+import com.dolby.android.alps.samples.AlpsManager
+import com.dolby.android.alps.samples.AlpsManager.Companion.TV_DEFAULT_PRESENTATION
+import com.dolby.android.alps.samples.AlpsMediaSourceFactory
+import com.dolby.android.alps.samples.AlpsManifestParser
+import com.dolby.android.alps.samples.models.PeriodWithPreselections
+import com.dolby.android.alps.samples.models.AlpsPresentationWrapper
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import kotlin.math.max
 
 @UnstableApi
-class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
+class PlayerActivity : AppCompatActivity() {
     companion object {
         private const val KEY_TRACK_SELECTION_PARAMETERS = "track_selection_parameters"
         private const val KEY_ITEM_INDEX: String = "item_index"
         private const val KEY_POSITION: String = "position"
         private const val KEY_AUTO_PLAY: String = "auto_play"
-
-        /**
-         *  Active presentation ID set to -1 means that ALPS processing will be skipped. In such
-         *  case decoder will choose presentation to decode based on device/TV settings.
-         *  [TV_DEFAULT_PRESENTATION] represents such case.
-         */
-        private val TV_DEFAULT_PRESENTATION =  Presentation(
-            id = -1,
-            label = "TV Default",
-            extendedLanguage = "unknown"
-        )
     }
+
     private lateinit var binding: ActivityPlayerBinding
     private var player: ExoPlayer? = null
 
@@ -101,20 +98,16 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     private var dataSourceFactory: DataSource.Factory? = null
     private var mediaItems = emptyList<MediaItem>()
 
-    private var alps: Alps? = null
-    @UnstableApi
-    private var alpsDataSourceFactory: AlpsHttpDataSource.Factory? = null
-    @UnstableApi
-    private val ac4DataSourceDetector = DashManifestAc4DataSourceDetector(null)
+    private var isAlpsEnabled = false
+    private val alpsManager = AlpsManager()
 
-    private var latestPresentationsList: List<Presentation> = emptyList()
-
-    private val presentationsWithTvDefault: List<Presentation>
-        get() = listOf(TV_DEFAULT_PRESENTATION) + latestPresentationsList
-    private var selectedPresentation = TV_DEFAULT_PRESENTATION
+    private var latestPresentationsList: List<AlpsPresentationWrapper> = emptyList()
+    private val latestPresentationsWithTvDefault
+        get() = latestPresentationsList.addTvDefaultPresentation()
 
     private var presentationButton: Button? = null
     private var presentationsDialog: PresentationsListDialog? = null
+    private var presentationChangeStyle: PresentationChangeStyle? = null
 
     private var deLevelToPresIdMap: Map<Int, Int> = emptyMap()
     private var deLevel: Int = 0
@@ -127,23 +120,14 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
-            alps = Alps().apply {
-                setPresentationsChangedCallback(this@PlayerActivity)
-            }
-            alpsDataSourceFactory = DataSourceUtil.getAlpsHttpDataSourceFactory(alps!!, ac4DataSourceDetector)
-            dataSourceFactory = DataSourceUtil.getAlpsDataSourceFactory(this, alpsDataSourceFactory!!)
-        } catch (e: Exception) {
-            alps = null
-            Napier.e("Alps creation failed. Exception message: ${e.message}")
-            showToast(R.string.error_alps_init)
-            finish()
-        }
+        isAlpsEnabled = intent.getBooleanExtra(IntentUtil.IS_ALPS_ENABLED, true)
+
+        dataSourceFactory = DataSourceUtil.getDataSourceFactory(this@PlayerActivity)
 
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.playerView. apply {
+        binding.playerView.apply {
             setErrorMessageProvider(PlayerErrorMessageProvider(context))
             requestFocus()
         }
@@ -161,6 +145,42 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
         }
 
         setupCustomControls()
+
+        /* Observe presentations state */
+        lifecycleScope.launch {
+            alpsManager.presentations.collect { presentations ->
+                latestPresentationsList = presentations
+                if (presentationChangeStyle == null) {
+                    decidePresentationSelectionStyle()
+                }
+                presentationChangeStyle?.let {
+                    when (it) {
+                        PresentationChangeStyle.DIALOG_ENHANCEMENT_ICON -> {
+                            mapPresentationsToDeLevels()
+                            if (!shouldShowDeDialog) {
+                                deDialog?.dismiss()
+                                deButton?.visibility = View.GONE
+                            } else {
+                                deButton?.visibility = View.VISIBLE
+                            }
+                            deDialog?.update(
+                                deLevel = deLevel,
+                                maxDeLevel = deLevelToPresIdMap.size -
+                                        DialogEnhancementDialog.REQUIRED_AMOUNT_OF_BASE_PRESENTATIONS_IN_DE_AC4_STREAM
+                            )
+                        }
+
+                        PresentationChangeStyle.LIST -> {
+                            presentationsDialog?.updatePresentations(
+                                latestPresentationsWithTvDefault
+                            )
+                        }
+
+                        PresentationChangeStyle.HIDDEN -> {}
+                    }
+                }
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -192,7 +212,7 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        alps?.close()
+        alpsManager.release()
     }
 
     override fun onRequestPermissionsResult(
@@ -246,7 +266,10 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
                 trackSelectionParameters = trackSelectionParameters
                 addListener(PlayerEventListener())
                 addAnalyticsListener(EventLogger())
-                setAudioAttributes(AudioAttributes.DEFAULT,true)
+                if (isAlpsEnabled) {
+                    addAnalyticsListener(alpsManager)
+                }
+                setAudioAttributes(AudioAttributes.DEFAULT, true)
                 playWhenReady = startAutoPlay
             }
             binding.playerView.setPlayer(player)
@@ -257,7 +280,6 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
         }
         player!!.setMediaItems(mediaItems, haveStartPosition.not())
         player!!.prepare()
-
         return true
     }
 
@@ -267,9 +289,31 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
             DataSourceUtil.getHttpDataSourceFactory()
         )
 
-        return DefaultMediaSourceFactory(this)
+        val defaultMediaSourceFactory = DefaultMediaSourceFactory(this)
             .setDataSourceFactory(dataSourceFactory!!)
             .setDrmSessionManagerProvider(drmSessionManagerProvider)
+
+        return if (isAlpsEnabled) {
+            val alpsChunkSourceFactory = AlpsDashChunkSourceFactory(
+                alpsManager,
+                DefaultHttpDataSource.Factory(),
+            )
+
+            val dashMediaSourceFactory = DashMediaSource.Factory(
+                alpsChunkSourceFactory,
+                DefaultHttpDataSource.Factory(),
+            )
+
+            val parser = AlpsManifestParser()
+            dashMediaSourceFactory.setManifestParser(parser)
+
+            AlpsMediaSourceFactory(
+                dashMediaSourceFactory,
+                defaultMediaSourceFactory
+            )
+        } else {
+            defaultMediaSourceFactory
+        }
     }
 
     private fun setRenderersFactory(
@@ -354,7 +398,7 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     }
 
     private fun setupCustomControls() {
-        if (alps == null) return
+        if (!isAlpsEnabled) return
 
         if (deButton == null) {
             deButton = binding.playerView.findViewById(R.id.de_button)
@@ -372,27 +416,44 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
             }
         }
 
-        val presentationChangeStyle = PresentationChangeStyle.entries.find {
-                it.toString() == intent.getStringExtra(IntentUtil.PRESENTATION_CHANGE_STYLE_EXTRA)
-            } ?: PresentationChangeStyle.LIST
+    }
 
-        updatePresentationSelectionButton(presentationChangeStyle)
+    private fun decidePresentationSelectionStyle() {
+        val changeStyle = PresentationChangeStyle.entries.find {
+            it.toString() == intent.getStringExtra(IntentUtil.PRESENTATION_CHANGE_STYLE_EXTRA)
+        } ?: PresentationChangeStyle.LIST
+        if (latestPresentationsList.isEmpty()) return
+        mapPresentationsToDeLevels()
+        if (
+            changeStyle == PresentationChangeStyle.DIALOG_ENHANCEMENT_ICON
+            && !shouldShowDeDialog
+        ) {
+            // If the first period is not compatible with DE, fallback to the list-style UI
+            presentationChangeStyle = PresentationChangeStyle.LIST
+        } else {
+            presentationChangeStyle = changeStyle
+        }
+        updatePresentationSelectionButton(
+            presentationChangeStyle ?: PresentationChangeStyle.LIST
+        )
     }
 
     private fun updatePresentationSelectionButton(presentationChangeStyle: PresentationChangeStyle) {
-        when(presentationChangeStyle) {
+        when (presentationChangeStyle) {
             PresentationChangeStyle.DIALOG_ENHANCEMENT_ICON -> {
                 presentationButton?.visibility = View.GONE
                 deButton?.visibility = View.VISIBLE
 
                 setDeDialogListener()
             }
+
             PresentationChangeStyle.LIST -> {
                 presentationButton?.visibility = View.VISIBLE
                 deButton?.visibility = View.GONE
 
                 setPresentationsDialogListener()
             }
+
             PresentationChangeStyle.HIDDEN -> {
                 presentationButton?.visibility = View.GONE
                 deButton?.visibility = View.GONE
@@ -401,15 +462,10 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     }
 
     private fun showPresentationsDialog() {
-        updatePresentationsState(onNewPresentationsCallback = null)
-        /* If active presentation is not on the presentations list we assume that TV default
-        presentation is active */
-        selectedPresentation = presentationsWithTvDefault.find {
-            it.id == alps!!.getActivePresentationId()
-        } ?: TV_DEFAULT_PRESENTATION
-
         if (presentationsDialog == null) {
-            presentationsDialog = PresentationsListDialog(presentationsWithTvDefault, selectedPresentation)
+            presentationsDialog = PresentationsListDialog(
+                latestPresentationsWithTvDefault
+            )
         }
 
         presentationsDialog?.show(
@@ -419,18 +475,17 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     }
 
     private fun setPresentationsDialogListener() {
-        PresentationsListDialog.myProvider = PresentationsListDialog.getDefaultDialogProvider { presentation ->
-            trySetPresentation(presentation)
-            presentationsDialog?.updateSelectedPresentation(selectedPresentation)
-        }
+        PresentationsListDialog.myProvider =
+            PresentationsListDialog.getDefaultDialogProvider { presentation ->
+                trySetPresentation(presentation)
+            }
     }
 
-    private fun trySetPresentation(newPresentation: Presentation) {
+    private fun trySetPresentation(newPresentation: AlpsPresentationWrapper) {
         try {
             Napier.d("Trying to set presentation: $newPresentation")
-            alps!!.setActivePresentationId(newPresentation.id)
+            alpsManager.setActivePresentationId(newPresentation.id)
             flushBuffer()
-            selectedPresentation = newPresentation
             Napier.d("Presentation setting success")
         } catch (e: Exception) {
             Napier.w("Changing presentation failed. ${e.message}")
@@ -438,9 +493,7 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     }
 
     private fun showDeDialog() {
-        updatePresentationsState {
-            mapPresentationsToDeLevels()
-        }
+        mapPresentationsToDeLevels()
 
         if (shouldShowDeDialog) {
             if (deDialog == null) {
@@ -462,29 +515,21 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
                         DialogEnhancementDialog.REQUIRED_AMOUNT_OF_BASE_PRESENTATIONS_IN_DE_AC4_STREAM
             )
         } else {
-            showToast("AC-4 stream doesn't meet DE content requirements. " +
-                    "Fallback to classic presentation selection list.")
+            showToast(
+                "AC-4 stream doesn't meet DE content requirements. " +
+                        "Fallback to classic presentation selection list."
+            )
+            presentationChangeStyle = PresentationChangeStyle.LIST
             updatePresentationSelectionButton(
                 PresentationChangeStyle.LIST
             )
         }
     }
 
-    private fun updatePresentationsState(
-        onNewPresentationsCallback: (() -> Unit)?
-    ) {
-        val newPresentationsList = alps!!.getPresentations()
-        if (latestPresentationsList.hasChanged(newPresentationsList)) {
-            Napier.i("New presentations list detected: $newPresentationsList")
-            latestPresentationsList = newPresentationsList
-
-            onNewPresentationsCallback?.invoke()
-        }
-    }
-
     private fun mapPresentationsToDeLevels() {
         if (latestPresentationsList.size in
-            DialogEnhancementDialog.RANGE_OF_ALLOWED_PRESENTATIONS_COUNT_IN_DE_DEMO_CONTENT) {
+            DialogEnhancementDialog.RANGE_OF_ALLOWED_PRESENTATIONS_COUNT_IN_DE_DEMO_CONTENT
+        ) {
             deLevelToPresIdMap = latestPresentationsList.mapIndexed { index, pres ->
                 if (index != latestPresentationsList.size - 1) {
                     index to pres.id
@@ -492,7 +537,7 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
                     DialogEnhancementDialog.DE_LEVEL_FOR_DIALOG_OFF to pres.id
                 }
             }.toMap()
-            val activePresentationId = alps?.getActivePresentationId()
+            val activePresentationId = latestPresentationsList.find { it.isActive }?.id ?: 0
 
             deLevel = 0
             for (level in deLevelToPresIdMap) {
@@ -505,25 +550,28 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
             shouldShowDeDialog = true
         } else {
             shouldShowDeDialog = false
-            Napier.w("${latestPresentationsList.size} presentations available. " +
-                    "Not in supported range for DIALOG_ENHANCEMENT_ICON demoing.")
+            Napier.w(
+                "${latestPresentationsList.size} presentations available. " +
+                        "Not in supported range for DIALOG_ENHANCEMENT_ICON demoing."
+            )
         }
     }
 
     private fun setDeDialogListener() {
-        DialogEnhancementDialog.myProvider = DialogEnhancementDialog.getDefaultDialogProvider { action ->
-            when (action) {
-                DialogEnhancementDialog.DeDialogAction.DeDown -> {
-                    tryChangeDeLevel(-1)
-                    deDialog?.update(deLevel)
-                }
+        DialogEnhancementDialog.myProvider =
+            DialogEnhancementDialog.getDefaultDialogProvider { action ->
+                when (action) {
+                    DialogEnhancementDialog.DeDialogAction.DeDown -> {
+                        tryChangeDeLevel(-1)
+                        deDialog?.update(deLevel)
+                    }
 
-                DialogEnhancementDialog.DeDialogAction.DeUp -> {
-                    tryChangeDeLevel(1)
-                    deDialog?.update(deLevel)
+                    DialogEnhancementDialog.DeDialogAction.DeUp -> {
+                        tryChangeDeLevel(1)
+                        deDialog?.update(deLevel)
+                    }
                 }
             }
-        }
     }
 
     private fun tryChangeDeLevel(change: Int) {
@@ -533,7 +581,7 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
                 throw Exception("Trying to set DE level ($deLevel) that is not on the list.")
             }.let { presId ->
                 Napier.d("Trying to set presentation: ${latestPresentationsList.find { it.id == presId }}")
-                alps!!.setActivePresentationId(presId)
+                alpsManager.setActivePresentationId(presId)
                 flushBuffer()
                 Napier.d("DE level (presentation) setting success")
             }
@@ -546,7 +594,6 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
     private fun flushBuffer() {
         if (player != null) {
             val currentPosition = player!!.currentPosition
-
             player!!.stop()
 
             player!!.seekTo(currentPosition)
@@ -564,40 +611,57 @@ class PlayerActivity : PresentationsChangedCallback, AppCompatActivity() {
             }
         }
 
+
+        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+                player?.let {
+                    when (val manifest = it.currentManifest) {
+                        is DashManifest -> {
+                            for (i in 0..<manifest.periodCount) {
+                                when (val period = manifest.getPeriod(i)) {
+                                    is PeriodWithPreselections -> {
+                                        Napier.d("Preselections in period $i")
+                                        Napier.d(period.preselections.toString())
+                                    }
+                                    else -> {
+                                        Napier.d("Period $i missing information about preselections")
+                                    }
+                                }
+                            }
+                        }
+                        else -> {
+                            Napier.d("Not a DASH manifest. Can't extract preselections")
+                        }
+                    }
+                } ?: Napier.d("Failed. Player is null")
+
+            super.onTimelineChanged(timeline, reason)
+        }
+
         override fun onTracksChanged(tracks: Tracks) {
             if (tracks === lastSeenTracks) return
 
             if (tracks.containsType(C.TRACK_TYPE_VIDEO)
-                && !tracks.isTypeSupported(C.TRACK_TYPE_VIDEO,true)
+                && !tracks.isTypeSupported(C.TRACK_TYPE_VIDEO, true)
             ) {
                 showToast(R.string.error_unsupported_video)
             }
             if (tracks.containsType(C.TRACK_TYPE_AUDIO)
-                && !tracks.isTypeSupported(C.TRACK_TYPE_AUDIO,true)
+                && !tracks.isTypeSupported(C.TRACK_TYPE_AUDIO, true)
             ) {
                 showToast(R.string.error_unsupported_audio)
             }
             lastSeenTracks = tracks
         }
 
-        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-            super.onTimelineChanged(timeline, reason)
-            if (player?.currentManifest is DashManifest) {
-                val manifest = player?.currentManifest as? DashManifest
-                manifest?.let {
-                    ac4DataSourceDetector.manifest = it
-                }
-            }
-        }
     }
 
-    override fun onPresentationsChanged() {
-        Napier.i("Received presentations list changed callback")
-        /* Example reaction to new presentations list */
-        alps?.let {
-            val presentations = it.getPresentations()
-            /* Setting active presentation to the first on the list or TV_DEFAULT if list is empty */
-            it.setActivePresentationId(presentations.firstOrNull()?.id ?: TV_DEFAULT_PRESENTATION.id)
-        }
+    private fun List<AlpsPresentationWrapper>.addTvDefaultPresentation(): List<AlpsPresentationWrapper> {
+        val isTvDefaultPresentationActive = this.none { it.isActive }
+        return listOf(
+            AlpsPresentationWrapper.from(
+                presentation = TV_DEFAULT_PRESENTATION,
+                isActive = isTvDefaultPresentationActive
+            )
+        ) + this
     }
 }
