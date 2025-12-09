@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -27,16 +27,47 @@
 package com.dolby.android.alps.models
 
 /**
+ * Data class representing a Kind box
+ * @param schemeUri the identifier of the naming scheme for the following value
+ * @param value a name from the declared scheme
+ */
+data class Kind(
+    val schemeUri: String,
+    val value: String,
+)
+
+/**
+ * Data class representing Label box
+ * @param labelId an integer that contains an identifier for the label. Labels with the same value belong to a label group
+ * @param language a IETF BCP 47 compliant language tag string
+ * @param label the textual description
+ * @param isGroupLabel The value `true` specifies that the label contains a summary label for a group of labels
+ */
+data class Label(
+    val labelId: Int,
+    val language: String,
+    val label: String,
+    val isGroupLabel: Boolean,
+)
+
+/**
  * Data class representing AC-4 presentation.
- *
  * @param id ID of the presentation
- * @param label label of the presentation
- * @param extendedLanguage language tag of the presentation
+ * @param extendedLanguage extendedLanguage language tag of the presentation
+ * @param kinds list of [Kind] boxes associated with this [Presentation]
+ * @param labels list of [Label] boxes associated with this [Presentation]
+ * @param selectionPriority the priority of the [Presentation]
+ * @param audioRenderingIndication a hint for a preferred reproduction channel layout
+ * @param dialogGain gain applied to the dialog component compared to the default mix, in dB
  */
 data class Presentation(
     val id: Int,
-    val label: String,
-    val extendedLanguage: String,
+    val extendedLanguage: String?,
+    val kinds: List<Kind>,
+    val labels: List<Label>,
+    val selectionPriority: Int,
+    val audioRenderingIndication: Int,
+    val dialogGain: Float?,
 )
 
 fun List<Presentation>.hasChanged(other: List<Presentation>): Boolean {

@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -26,6 +26,7 @@
 
 package com.dolby.android.alps
 
+import com.dolby.android.alps.models.Label
 import com.dolby.android.alps.models.Presentation
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
@@ -33,17 +34,39 @@ import org.junit.jupiter.params.provider.ArgumentsProvider
 import java.util.stream.Stream
 
 
-class PresentationsProvider: ArgumentsProvider {
+class PresentationsProvider : ArgumentsProvider {
     private val examplePresentationsList = listOf(
         Presentation(
             id = 0,
-            label = "English",
-            extendedLanguage = "eng"
+            labels = listOf(
+                Label(
+                    label = "English",
+                    language = "en_EN",
+                    labelId = 1,
+                    isGroupLabel = false,
+                )
+            ),
+            kinds = emptyList(),
+            audioRenderingIndication = 0,
+            dialogGain = 0f,
+            extendedLanguage = "eng",
+            selectionPriority = 0,
         ),
         Presentation(
             id = 1,
-            label = "Deutsch",
-            extendedLanguage = "de"
+            labels = listOf(
+                Label(
+                    label = "Deutsch",
+                    language = "de_DE",
+                    labelId = 1,
+                    isGroupLabel = false,
+                )
+            ),
+            kinds = emptyList(),
+            audioRenderingIndication = 0,
+            dialogGain = 0f,
+            extendedLanguage = "de",
+            selectionPriority = 0,
         )
     )
 

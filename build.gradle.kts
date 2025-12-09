@@ -33,7 +33,9 @@ subprojects {
 }
 
 tasks.dokkaHtmlMultiModule {
-    moduleVersion.set(getVersionName(rootDir, Module.APP))
+    moduleName.set("ALPS Android")
+    moduleVersion.set(getVersionName(rootDir, Module.LIBRARY))
+    includes.from("README.md")
 }
 
 tasks.named<Delete>("clean") {

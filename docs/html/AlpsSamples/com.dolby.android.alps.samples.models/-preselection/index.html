@@ -1,0 +1,273 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Preselection</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            ALPS Android
+                    </a>            </div>
+            <div class="library-version">2.0.0
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":AlpsSamples:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="AlpsSamples::com.dolby.android.alps.samples.models/Preselection///PointingToDeclaration//-453865878">
+  <div class="breadcrumbs"><a href="../../index.html">AlpsSamples</a><span class="delimiter">/</span><a href="../index.html">com.dolby.android.alps.samples.models</a><span class="delimiter">/</span><span class="current">Preselection</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Preselection</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/util/UnstableApi.html"><span class="token annotation builtin">UnstableApi</span></a></div></div><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Preselection</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>labels<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Label.html">Label</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>lang<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>tag<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>audioChannelConfiguration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>groupLabels<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Label.html">Label</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>essentialProperties<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>supplementalProperties<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>roles<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>selectionPriority<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Data class representing a DASH <preselection> tag, parsed form the DASH manifest.</preselection></p><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.dolby.android.alps.samples/-alps-manifest-parser/index.html"><span>Alps</span><wbr><span>Manifest</span><wbr><span><span>Parser</span></span></a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="602820146%2FConstructors%2F-453865878" anchor-label="Preselection" id="602820146%2FConstructors%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-preselection.html"><span><span>Preselection</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="602820146%2FConstructors%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">labels<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Label.html">Label</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">lang<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">tag<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">audioChannelConfiguration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">groupLabels<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Label.html">Label</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">essentialProperties<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">supplementalProperties<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">roles<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">selectionPriority<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-550600%2FProperties%2F-453865878" anchor-label="audioChannelConfiguration" id="-550600%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="audio-channel-configuration.html"><span>audio</span><wbr><span>Channel</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-550600%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="audio-channel-configuration.html">audioChannelConfiguration</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="681991616%2FProperties%2F-453865878" anchor-label="essentialProperties" id="681991616%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="essential-properties.html"><span>essential</span><wbr><span><span>Properties</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="681991616%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="essential-properties.html">essentialProperties</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="183786531%2FProperties%2F-453865878" anchor-label="groupLabels" id="183786531%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="group-labels.html"><span>group</span><wbr><span><span>Labels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="183786531%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="group-labels.html">groupLabels</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Label.html">Label</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1476760450%2FProperties%2F-453865878" anchor-label="id" id="-1476760450%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="id.html"><span><span>id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1476760450%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="id.html">id</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-427080678%2FProperties%2F-453865878" anchor-label="labels" id="-427080678%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="labels.html"><span><span>labels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-427080678%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="labels.html">labels</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/Label.html">Label</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1288864757%2FProperties%2F-453865878" anchor-label="lang" id="-1288864757%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="lang.html"><span><span>lang</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1288864757%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="lang.html">lang</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="33783972%2FProperties%2F-453865878" anchor-label="roles" id="33783972%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="roles.html"><span><span>roles</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="33783972%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="roles.html">roles</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1410539151%2FProperties%2F-453865878" anchor-label="selectionPriority" id="-1410539151%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="selection-priority.html"><span>selection</span><wbr><span><span>Priority</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1410539151%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="selection-priority.html">selectionPriority</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-335123422%2FProperties%2F-453865878" anchor-label="supplementalProperties" id="-335123422%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="supplemental-properties.html"><span>supplemental</span><wbr><span><span>Properties</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-335123422%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="supplemental-properties.html">supplementalProperties</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/dash/manifest/Descriptor.html">Descriptor</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1267106663%2FProperties%2F-453865878" anchor-label="tag" id="1267106663%2FProperties%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="tag.html"><span><span>tag</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1267106663%2FProperties%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="tag.html">tag</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="2131201956%2FFunctions%2F-453865878" anchor-label="toPresentation" id="2131201956%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-presentation.html"><span>to</span><wbr><span><span>Presentation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2131201956%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="to-presentation.html"><span class="token function">toPresentation</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../AlpsCore/com.dolby.android.alps.models/-presentation/index.html">Presentation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

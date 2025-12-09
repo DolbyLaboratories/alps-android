@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -82,13 +82,15 @@ class Alps(
      * Release resources. Must be called when object is no longer needed.
      */
     fun release() {
-        alpsNative.release()
+        ifInitialized {
+            alpsNative.release()
+        }
     }
 
     /**
      * Sets presentations list changed callback.
      *
-     * Callback is triggered whenever new presentations list is detected during ISO BMFF segment
+     * Callback is triggered whenever new presentations list is detected during ISOBMFF segment
      * processing.
      *
      * It's up to ALPS library user to react properly to presentations list change. It is

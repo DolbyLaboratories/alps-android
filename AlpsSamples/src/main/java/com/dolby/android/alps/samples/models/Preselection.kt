@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -29,7 +29,13 @@ package com.dolby.android.alps.samples.models
 import androidx.media3.common.Label
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.dash.manifest.Descriptor
+import com.dolby.android.alps.models.Presentation
+import com.dolby.android.alps.models.Label as AlpsLabel
 import com.dolby.android.alps.samples.AlpsManifestParser
+
+
+private const val DIALOG_GAIN_MANIFEST_URI = "tag:dolby.com,2018:accessibility:dialogue_gain:2025"
+
 
 /**
  * Data class representing a DASH <Preselection> tag, parsed form the DASH manifest.
@@ -41,12 +47,36 @@ data class Preselection
     val id: String,
     val labels: List<Label>,
     val lang: String?,
-    val tag: Int?,
+    val tag: Int,
     val audioChannelConfiguration : List<Descriptor>,
     val groupLabels: List<Label>,
     val essentialProperties: List<Descriptor>,
     val supplementalProperties: List<Descriptor>,
     val roles: List<Descriptor>,
     val selectionPriority: Int,
+){
+    fun toPresentation(): Presentation {
+        val dialogGain: Float? =
+            supplementalProperties
+                .find { it.schemeIdUri == DIALOG_GAIN_MANIFEST_URI }
+                ?.let { it.value?.toFloat() }
+        val labels: List<AlpsLabel> = labels.mapIndexed {index,label ->
+            AlpsLabel(
+                labelId = 1,
+                language = label.language ?: "",
+                label = label.value,
+                isGroupLabel = false,
+            )
+        }
 
-)
+        return Presentation(
+            id = tag,
+            extendedLanguage = lang,
+            kinds = emptyList(),
+            labels = labels,
+            selectionPriority = selectionPriority,
+            audioRenderingIndication = 0,
+            dialogGain = dialogGain,
+        )
+    }
+}

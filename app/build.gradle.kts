@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dolby.android.alps.app"
-        minSdk = 29
+        minSdk = 28
         targetSdk = 34
         versionCode = appVersionCode
         versionName = appVersionName

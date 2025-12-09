@@ -1,5 +1,5 @@
 # Android ALPS CLI tool
-A headless android app for processing ISO BMFF segments with ALPS core library. 
+A headless android app for processing ISOBMFF segments with ALPS core library. 
 
 ## Setup environment
 App has to be installed on android device or an emulator.

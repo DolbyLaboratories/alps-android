@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -79,7 +79,7 @@ class PresentationsRecyclerViewAdapter(
         ) {
             this.presentation = presentation
             binding.apply {
-                label.text = presentation.label
+                label.text = presentation.labels.first().label
                 selectionIcon.setImageResource(
                     if (presentation.isActive) {
                         R.drawable.ic_selected

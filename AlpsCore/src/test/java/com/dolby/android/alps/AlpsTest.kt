@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -35,6 +35,7 @@ import com.dolby.android.alps.utils.AlpsException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -76,22 +77,28 @@ class AlpsTest {
                 nativeInitializeException = nativeException
             )
 
-            val exception = assertThrows<AlpsException>{
+            val exception = assertThrows<AlpsException> {
                 alps = Alps(mockedAlpsNative)
             }
             assertThat(exception).isEqualTo(nativeException)
         }
 
         @Test
-        fun `release calls native release`() {
-            val mockedAlpsNative = getMockedAlpsNative()
+        fun `release calls native release only if initialized`() {
+            val mockedAlpsNative = getMockedAlpsNative(
+                isInitializedResponses = listOf(true, false)
+            )
             alps = Alps(mockedAlpsNative)
 
             alps.release()
+            val exception = assertThrows<AlpsException> {
+                alps.release()
+            }
 
             verify(exactly = 1) {
                 mockedAlpsNative.release()
             }
+            assertTrue(exception is AlpsException.NotInitialized)
         }
     }
 
@@ -206,14 +213,14 @@ class AlpsTest {
 }
 
 private fun getMockedAlpsNative(
-    isInitializedResponse: Boolean = true,
+    isInitializedResponses: List<Boolean> = listOf(true),
     nativeInitializeException: AlpsException? = null,
     nativeProcessBufferException: AlpsException? = null,
     nativeGetPresentationsResponse: List<Presentation>? = emptyList(),
     nativeGetActivePresentationIdResponse: Int = 0,
     nativeSetActivePresentationIdException: AlpsException? = null,
 ) = mockk<AlpsNative>(relaxed = true) {
-        every { isInitialized() } returns isInitializedResponse
+        every { isInitialized() } returnsMany isInitializedResponses
         nativeInitializeException?.let { every { initialize() } throws it }
         nativeProcessBufferException?.let { every { processIsobmffSegment(any()) } throws it }
         every { getPresentations() } returns nativeGetPresentationsResponse

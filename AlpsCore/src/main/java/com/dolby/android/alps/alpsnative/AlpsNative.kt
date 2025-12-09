@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -61,7 +61,7 @@ interface AlpsNative {
     /**
      * Sets presentations list changed callback.
      *
-     * Callback is triggered whenever new presentations list is detected during ISO BMFF segment
+     * Callback is triggered whenever new presentations list is detected during ISOBMFF segment
      * processing.
      *
      * @param callback callback function that will be invoked whenever presentations list change

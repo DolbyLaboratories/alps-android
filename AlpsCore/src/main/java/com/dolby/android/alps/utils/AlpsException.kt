@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -54,6 +54,7 @@ sealed class AlpsException(
         class NextSegment(): Native("Next segment")
         class NoMovieInfo(): Native("No Movie info")
         class PresIdNotFound(): Native("Pres ID not found")
+        class NoAc4Track(): Native("No tracks with AC-4 samples in the parsed segment")
     }
 
     /**

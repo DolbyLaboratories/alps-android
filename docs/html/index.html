@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>All modules</title>
+    <link href="images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="scripts/sourceset_dependencies.js" async="async"></script>
+<link href="styles/style.css" rel="Stylesheet">
+<link href="styles/main.css" rel="Stylesheet">
+<link href="styles/prism.css" rel="Stylesheet">
+<link href="styles/logo-styles.css" rel="Stylesheet">
+<link href="styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="index.html">
+                            ALPS Android
+                    </a>
+            </div>
+            <div class="library-version">
+2.0.0            </div>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" id="content" pageIds="ALPS Android::.ext/allModules///PointingToDeclaration//0">
+  <div class="breadcrumbs"></div>
+  <div class="cover ">
+    <div class="cover ">
+      <h1 class="">ALPS Android</h1>
+      <p class="paragraph">ALPS (Application Layer Presentation Selection) enables selection of a presentation from a <strong>Dolby</strong> AC-4 bitstream. The <strong>Dolby</strong> AC-4 decoder will subsequently decode only the selected presentation  from that bitstream, ignoring all the other presentations. ALPS Android is a JNI-based wrapper  around the native library for integration with Android playback applications and is built to process  ISOBMFF media segments.</p>
+      <h2 class="">Table of Contents</h2>
+      <ul>
+        <li>
+          <p class="paragraph">#installation</p>
+        </li>
+        <li>
+          <p class="paragraph">#quickstart</p>
+        </li>
+        <li>
+          <p class="paragraph">#api</p>
+        </li>
+        <li>
+          <p class="paragraph">#dolby-ac-4-presentation-signaling</p>
+        </li>
+        <li>
+          <p class="paragraph">#known-limitations</p>
+        </li>
+        <li>
+          <p class="paragraph">#support--contact</p>
+        </li>
+        <li>
+          <p class="paragraph">#license--third-party</p>
+        </li>
+        <li>
+          <p class="paragraph">#release-notes</p>
+        </li>
+      </ul>
+      <h2 class="">Installation</h2>
+      <p class="paragraph">This library is not published on Maven Central. You have two options to install the library:</p>
+      <ol>
+        <li>
+          <p class="paragraph">Copy the modules you want to use into your project and include it as Gradle modules.</p>
+        </li>
+        <li>
+          <p class="paragraph">Use a prebuilt AAR from <code class="lang-kotlin">&lt;module&gt;/releases</code> and link it to your app.</p>
+        </li>
+      </ol>
+      <h3 class="">Modules</h3>
+      <p class="paragraph">ALPS Android project consists of:</p>
+      <ul>
+        <li>
+          <p class="paragraph">AlpsCore/README.md — Core library module with ALPS functionality.</p>
+        </li>
+        <li>
+          <p class="paragraph">AlpsSamples/README.md — Media3/ExoPlayer integration helpers and examples.</p>
+        </li>
+        <li>
+          <p class="paragraph">app/README.md — ALPS-integrated sample playback app.</p>
+        </li>
+        <li>
+          <p class="paragraph">CLI/README.md — Headless Android tool for automated AlpsCore testing.</p>
+        </li>
+      </ul>
+      <h2 class="">Quickstart</h2>
+      <h3 class="">Using AlpsCore only</h3>
+      <p class="paragraph">Instantiate AlpsCore/src/main/java/com/dolby/android/alps/Alps.kt. Optionally, set a  presentations-changed callback, and process ISOBMFF audio segments before passing them to the decoder.</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">val alps = Alps().apply {<br>    setPresentationsChangedCallback(object: PresentationsChangedCallback{<br>        override fun onPresentationsChanged() {<br>            val presentations = this@apply.getPresentations()<br>            val selectedPresentationId = 1<br>            this@apply.setActivePresentationId(selectedPresentationId)<br>        }<br>    })<br>}</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <p class="paragraph">Note: <strong>Alps object should be used for single period of content.</strong> For multi-period content, multiple instances of Alps should be used - we recommend usage of  AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManager.kt if multi-period content support is needed.</p>
+      <h3 class="">Using AlpsSamples module</h3>
+      <p class="paragraph">This module consists of couple classes/layers that fit into the Media3 architecture. Using all layers together is the most straightforward approach but if it does not suite your app, you may also use just some of them. Going from the outermost layer:</p>
+      <ul>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsMediaSourceFactory.kt -   Custom MediaSource.Factory that allows using custom DashMediaSource.Factory for DASH content   and DefaultMediaSourceFactory for other content. Allows using AlpsDashChunkSourceFactory.</p>
+        </li>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsDashChunkSourceFactory.kt -   Custom DashChunkSource.Factory class that allows applying ALPS for proper DASH chunks (<strong>Dolby</strong> AC-4).</p>
+        </li>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsHttpDataSource.kt - Custom   implementation of BaseDataSource and implements HttpDataSource interface. It adds ALPS library   processing on top of DefaultHttpDataSource (or other implementation of HttpDataSource interface)   operations. For better separation of concerns, actual ALPS related processing is done in   AlpsProcessing.</p>
+        </li>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsProcessing.kt -    Opens http data source, downloads the whole segment and processes it using the ALPS library:</p>
+          <div class="sample-container">
+            <pre><code class="block lang-kotlin" theme="idea">  val directByteBuffer = ByteBuffer.allocateDirect(segmentBuffer.size)<br>  directByteBuffer.put(segmentBuffer)<br>  alps.processIsobmffSegment(directByteBuffer) &lt;--- direct Alps library call<br>  directByteBuffer.position(0)<br>  directByteBuffer.get(segmentBuffer)<br>  inputStream = ByteArrayInputStream(segmentBuffer)</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+              <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+            </span></div>
+          <p class="paragraph">After that it returns requested data portions of the already processed segment.</p>
+        </li>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManager.kt - allows    simpler multi-period content handling. We recommend to use it instead of using Alps objects    directly. It provides similar API to Alps class but takes care of handling multiple Alps objects   for each period.</p>
+          <div class="sample-container">
+            <pre><code class="block lang-kotlin" theme="idea">val alpsManager = AlpsManager()<br>/** Inject it into AlpsDashChunkSourceFactory when setting ExoPlayer pipeline **/<br>val dashChunkSourceFactory = AlpsDashChunkSourceFactory(<br>    alpsManager = alpsManager,<br>    DefaultHttpDataSource.Factory()<br>)<br>/** Use it during playback **/<br>/* Provide current period index OR set alpsManager as Player's AnalyticsListener */<br>alpsManager.setCurrentPeriodIndex(periodIndex)<br>/* Observe presentations */<br>alpsManager.presentations.collect { presentations -&gt; ... }<br>/* Set desired presentation ID */<br>alpsManager.setActivePresentationId(id)<br><br>/** Release when playback finished **/<br>alpsManager.release()</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+              <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+            </span></div>
+        </li>
+      </ul>
+      <h3 class="">Logging</h3>
+      <p class="paragraph">ALPS library logs can be controlled by the application. By default library will not print any logs.  To catch library logs and handle them as you like, use AlpsCore/src/main/java/com/dolby/android/alps/logger/AlpsLogger.kt interface and AlpsCore/src/main/java/com/dolby/android/alps/logger/AlpsLogger.kt object.  Just override AlpsLoggerProvider.logger with your own implementation of AlpsLogger, for example:</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">AlpsLoggerProvider.logger = object: AlpsLogger {<br>    override fun logInfo(message: String) {<br>        Napier.i(<br>            tag = ALPS_LIBRARY_LOGS_TAG,<br>            message = message<br>        )<br>    }<br><br>    override fun logWarn(message: String) {<br>        Napier.w(<br>            tag = ALPS_LIBRARY_LOGS_TAG,<br>            message = message<br>        )<br>    }<br><br>    override fun logError(message: String) {<br>        Napier.e(<br>            tag = ALPS_LIBRARY_LOGS_TAG,<br>            message = message<br>        )<br>    }<br>}</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <h2 class="">API</h2>
+      <p class="paragraph">AlpsCore library API is represented by AlpsCore/src/main/java/com/dolby/android/alps/Alps.kt  class.</p>
+      <p class="paragraph">If AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManager.kt from AlpsSamples module is used, it can be treated as a library API.</p>
+      <p class="paragraph">Detailed API description can be found in docs or in the code directly.</p>
+      <h2 class=""><strong>Dolby</strong> AC-4 presentation signaling</h2>
+      <p class="paragraph">ALPS supports two signaling methods:</p>
+      <ul>
+        <li>
+          <p class="paragraph">ISOBMFF init segment level signaling</p>
+        </li>
+        <li>
+          <p class="paragraph">External signaling</p>
+        </li>
+      </ul>
+      <h3 class="">ISOBMFF init segment signaling</h3>
+      <p class="paragraph">ALPS supports presentation signaling on ISOBMFF init segment level and provides parsing support for  this data. An abbreviated example of the ISOBMFF structure with boxes that are relevant to ALPS can be  found below. <strong>Dolby</strong> AC-4 bitstreams may be packaged containing this information so that the available  presentations and their properties can be derived from the ISOBMFF segment. Information derived from those boxes can be accessed through the <code class="lang-kotlin">getPresentations</code> method.</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">[moov]<br>    [trak]<br>        [tkhd]<br>            track_ID<br>[meta]<br>    [grpl]<br>        [prsl]<br>            entity_id<br>            preselection_tag<br>            selection_priority<br>            [elng]<br>                extended_language<br>            [labl]<br>                label_id<br>                language<br>                label<br>            [ardi]<br>                audio_rendering_indication<br>            [kind]<br>                schemeURI<br>                value<br>            [udta]<br>                [diap]<br>                    dialog_gain</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <h3 class="">External signaling</h3>
+      <p class="paragraph">ALPS supports presentation signaling by external means, typically done via MPEG-DASH manifest.  Parsing this data is out-of-scope for the ALPS library and must be performed on application level.  In such a case ALPS still allows to set the active presentation using <code class="lang-kotlin">setActivePresentationId</code>. The  <code class="lang-kotlin">getPresentations</code> method can be used to validate whether the presentations from the external source match those from the ISOBMFF init segment. Note that ALPS will always validate the selected  presentation ID against the presentation IDs found in the TOC and disable processing if the  requested ID is not available in the TOC.</p>
+      <p class="paragraph">AlpsSamples module provide a helper class AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManifestParser.kt which is an extension of Media3's DashManifestParser that adds support for parsing DASH manifest  <Preselection> elements. This custom parser extends the standard DASH manifest parsing to handle  additional metadata that can be used for content preselection. The parser creates  AlpsSamples/src/main/java/com/dolby/android/alps/samples/models/PeriodWithPreselections.kt objects instead of standard Period objects, allowing applications to access preselection metadata</p>
+      <h2 class="">Known limitations</h2>
+      <h3 class="">CMAF compliance</h3>
+      <p class="paragraph">The ALPS library has been tested using <strong>CMAF (Common Media Application Format)</strong> compliant content. Using the ALPS library with content that uses features beyond the standardized CMAF feature subset might cause unexpected behavior.</p>
+      <h3 class=""><strong>Dolby</strong> AC-4 content requirements</h3>
+      <p class="paragraph">ALPS functionality depends on parsing and modifying <strong>Dolby</strong> AC-4 TOC. DRM protected content may be compatible with ALPS if the TOC is left unencrypted. In that case, only the audio substreams are encrypted.</p>
+      <h3 class="">Buffer management</h3>
+      <p class="paragraph">Devices typically buffer some audio to ensure a good playback experience in cases of varying network conditions. These buffers need to be flushed when changing the presentation to apply the changed audio configuration quickly after the user selection has been made. Flushing buffers should ideally be provided by the player and should be triggered when a different presentation is selected.</p>
+      <h2 class="">Support / Contact</h2>
+      <ul>
+        <li>
+          <p class="paragraph">Questions, issues, or feature requests: please open an issue in this repository.</p>
+        </li>
+        <li>
+          <p class="paragraph">For commercial support inquiries, contact your Dolby representative.</p>
+        </li>
+      </ul>
+      <h2 class="">License & third-party</h2>
+      <ul>
+        <li>
+          <p class="paragraph">License: see LICENSE.md</p>
+        </li>
+        <li>
+          <p class="paragraph">Third-party notices: see <code class="lang-kotlin">thirdPartyLicenses/</code> directories in modules.</p>
+        </li>
+      </ul>
+      <h2 class="">Release notes</h2>
+      <p class="paragraph">See RELEASENOTES.md</p>
+    </div>
+    <h2 class="">All modules:</h2>
+    <div class="table"><a data-name="395567784%2FMain%2F0" anchor-label="AlpsCore" id="395567784%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="AlpsCore/index.html">AlpsCore</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="395567784%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1788801874%2FMain%2F0" anchor-label="AlpsSamples" id="1788801874%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="AlpsSamples/index.html">AlpsSamples</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1788801874%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-864255347%2FMain%2F0" anchor-label="CLI" id="-864255347%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="CLI/index.html">CLI</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-864255347%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1551721612%2FMain%2F0" anchor-label="app" id="1551721612%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="app/index.html">app</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1551721612%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

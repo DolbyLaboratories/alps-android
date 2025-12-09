@@ -1,0 +1,213 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Alps</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            ALPS Android
+                    </a>            </div>
+            <div class="library-version">2.0.0
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":AlpsCore:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="AlpsCore::com.dolby.android.alps/Alps///PointingToDeclaration//1261806438">
+  <div class="breadcrumbs"><a href="../../index.html">AlpsCore</a><span class="delimiter">/</span><a href="../index.html">com.dolby.android.alps</a><span class="delimiter">/</span><span class="current">Alps</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Alps</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Alps</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">alpsNative<span class="token operator">: </span><a href="../../com.dolby.android.alps.alpsnative/-alps-native/index.html">AlpsNative</a><span class="token operator"> = </span>DefaultAlpsNative()</span></span><span class="token punctuation">)</span></div><p class="paragraph">Main ALPS library class - API of the library.</p><p class="paragraph">Use it to:</p><ul><li><p class="paragraph">get library version</p></li><li><p class="paragraph">initialize ALPS library</p></li><li><p class="paragraph">set presentations list changed callback</p></li><li><p class="paragraph">process MP4 segments buffers</p></li><li><p class="paragraph">get available presentations list</p></li><li><p class="paragraph">get active presentation ID</p></li><li><p class="paragraph">set active presentation</p></li><li><p class="paragraph">close ALPS library</p></li></ul><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>alps</span><wbr><span><span>Native</span></span></u></div></span></div><div><div class="title"><p class="paragraph">object implementing <a href="../../com.dolby.android.alps.alpsnative/-alps-native/index.html">AlpsNative</a> interface. Recommended to <strong>use default value</strong> <a href="../../com.dolby.android.alps.alpsnative/-default-alps-native/index.html">DefaultAlpsNative</a>.</p></div></div></div></div></div><h4 class="">Throws</h4><div class="table"><div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.dolby.android.alps.utils/-alps-exception/index.html"><span>Alps</span><wbr><span><span>Exception</span></span></a></div></span></div><div><div class="title"><p class="paragraph">if querying memory, allocating it or initializing native library failed.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="2070981981%2FConstructors%2F1261806438" anchor-label="Alps" id="2070981981%2FConstructors%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-alps.html"><span><span>Alps</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2070981981%2FConstructors%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">alpsNative<span class="token operator">: </span><a href="../../com.dolby.android.alps.alpsnative/-alps-native/index.html">AlpsNative</a><span class="token operator"> = </span>DefaultAlpsNative()</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Tries to initialize alpsNative object.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-505537018%2FClasslikes%2F1261806438" anchor-label="Companion" id="-505537018%2FClasslikes%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-505537018%2FClasslikes%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1307085970%2FFunctions%2F1261806438" anchor-label="getActivePresentationId" id="-1307085970%2FFunctions%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-active-presentation-id.html"><span>get</span><wbr><span>Active</span><wbr><span>Presentation</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1307085970%2FFunctions%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="get-active-presentation-id.html"><span class="token function">getActivePresentationId</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Fetches active presentation ID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="964970744%2FFunctions%2F1261806438" anchor-label="getPresentations" id="964970744%2FFunctions%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-presentations.html"><span>get</span><wbr><span><span>Presentations</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="964970744%2FFunctions%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="get-presentations.html"><span class="token function">getPresentations</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../com.dolby.android.alps.models/-presentation/index.html">Presentation</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Fetches presentations list.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-206780153%2FFunctions%2F1261806438" anchor-label="processIsobmffSegment" id="-206780153%2FFunctions%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="process-isobmff-segment.html"><span>process</span><wbr><span>Isobmff</span><wbr><span><span>Segment</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-206780153%2FFunctions%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="process-isobmff-segment.html"><span class="token function">processIsobmffSegment</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">segmentBuf<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/nio/ByteBuffer.html">ByteBuffer</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Processes buffer of fragmented MP4 segment. This method should be called for all audio segments.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1637301480%2FFunctions%2F1261806438" anchor-label="release" id="-1637301480%2FFunctions%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="release.html"><span><span>release</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1637301480%2FFunctions%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="release.html"><span class="token function">release</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Release resources. Must be called when object is no longer needed.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1378586880%2FFunctions%2F1261806438" anchor-label="setActivePresentationId" id="1378586880%2FFunctions%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-active-presentation-id.html"><span>set</span><wbr><span>Active</span><wbr><span>Presentation</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1378586880%2FFunctions%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-active-presentation-id.html"><span class="token function">setActivePresentationId</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">presentationId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets active presentation to the one with matching ID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1974702201%2FFunctions%2F1261806438" anchor-label="setPresentationsChangedCallback" id="-1974702201%2FFunctions%2F1261806438" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsCore:dokkaHtmlPartial/release" data-filterable-set=":AlpsCore:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-presentations-changed-callback.html"><span>set</span><wbr><span>Presentations</span><wbr><span>Changed</span><wbr><span><span>Callback</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1974702201%2FFunctions%2F1261806438"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsCore:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-presentations-changed-callback.html"><span class="token function">setPresentationsChangedCallback</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">callback<span class="token operator">: </span><a href="../-presentations-changed-callback/index.html">PresentationsChangedCallback</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets presentations list changed callback.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

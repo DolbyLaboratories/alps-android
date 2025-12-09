@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -188,12 +188,12 @@ class AlpsManifestParser : DashManifestParser() {
         val id: String = parseString(xpp, "id", "1")
 
         val lang: String? = runCatching {
-            xpp.getAttributeValue(null, "tag")
+            xpp.getAttributeValue(null, "lang")
         }.getOrNull()
 
-        val presentationTag: Int? = runCatching {
+        val presentationTag: Int = runCatching {
             Integer.parseInt(xpp.getAttributeValue(null, "tag"))
-        }.getOrNull()
+        }.getOrDefault(-1)
 
         val selectionPriority: Int = parseInt(xpp, "selectionPriority", 1)
 

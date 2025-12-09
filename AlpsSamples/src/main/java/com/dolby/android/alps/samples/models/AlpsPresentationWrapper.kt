@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -26,7 +26,10 @@
 
 package com.dolby.android.alps.samples.models
 
+import com.dolby.android.alps.models.Kind
+import com.dolby.android.alps.models.Label
 import com.dolby.android.alps.models.Presentation
+import kotlin.Int
 
 /**
  * Wrapper of [Presentation] class from AlpsCore library. Adds [isActive] information to
@@ -38,8 +41,12 @@ import com.dolby.android.alps.models.Presentation
  */
 data class AlpsPresentationWrapper(
     val id: Int,
-    val label: String,
-    val extendedLanguage: String,
+    val extendedLanguage: String?,
+    val kinds: List<Kind>,
+    val labels: List<Label>,
+    val selectionPriority: Int,
+    val audioRenderingIndication: Int,
+    val dialogGain: Float?,
     val isActive: Boolean,
 ) {
     companion object {
@@ -48,8 +55,12 @@ data class AlpsPresentationWrapper(
             isActive: Boolean = false,
         ) = AlpsPresentationWrapper(
             id = presentation.id,
-            label = presentation.label,
             extendedLanguage = presentation.extendedLanguage,
+            kinds = presentation.kinds,
+            labels = presentation.labels,
+            selectionPriority = presentation.selectionPriority,
+            audioRenderingIndication = presentation.audioRenderingIndication,
+            dialogGain = presentation.dialogGain,
             isActive = isActive,
         )
     }

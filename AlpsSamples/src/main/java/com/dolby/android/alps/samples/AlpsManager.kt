@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -32,6 +32,7 @@ import androidx.media3.exoplayer.analytics.AnalyticsListener
 import com.dolby.android.alps.Alps
 import com.dolby.android.alps.PresentationsChangedCallback
 import com.dolby.android.alps.logger.AlpsLoggerProvider
+import com.dolby.android.alps.models.Label
 import com.dolby.android.alps.models.Presentation
 import com.dolby.android.alps.samples.models.AlpsPresentationWrapper
 import com.dolby.android.alps.utils.AlpsException
@@ -40,7 +41,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- *  [AlpsManager] is a helper class that allows easier multi-period content handling.
+ *  [AlpsManager] is a helper class that allows easier multi-period content handling. We recommend
+ *  to use one AlpsManager per MediaItem playback.
  *
  *  [Alps] object should only process 1 period to avoid misalignment between buffered and
  *  currently playing data. [AlpsManager] holds a map of [Alps] objects assigned to specific period.
@@ -61,13 +63,13 @@ import kotlinx.coroutines.flow.update
  *  using [setCurrentPeriodIndex] method.
  *
  *
- *  @property presentationSelectionPersistanceEnabled If `true`, the [AlpsManager] will try to
+ *  @property presentationSelectionPersistenceEnabled If `true`, the [AlpsManager] will try to
  *  keep the same presentation selected after a period change. On by default
  *
  */
 @UnstableApi
 class AlpsManager(
-    val presentationSelectionPersistanceEnabled: Boolean = true
+    val presentationSelectionPersistenceEnabled: Boolean = true
 ): AnalyticsListener {
     companion object {
         /**
@@ -77,8 +79,17 @@ class AlpsManager(
          */
         val TV_DEFAULT_PRESENTATION =  Presentation(
             id = -1,
-            label = "TV Default",
-            extendedLanguage = "unknown"
+            labels = listOf(Label(
+                label = "TV Default",
+                language = "unknown",
+                labelId = 1,
+                isGroupLabel = false,
+            )),
+            kinds = emptyList(),
+            audioRenderingIndication = 0,
+            dialogGain = 0f,
+            extendedLanguage = "unknown",
+            selectionPriority = 0,
         )
     }
 
@@ -119,7 +130,7 @@ class AlpsManager(
                 Alps().apply {
                     setPresentationsChangedCallback(object : PresentationsChangedCallback {
                         override fun onPresentationsChanged() {
-                            if (presentationSelectionPersistanceEnabled){
+                            if (presentationSelectionPersistenceEnabled) {
                                 setActivePresentationId(userPreferredPresentationId ?: -1)
                             }
                             updatePresentationsState()
@@ -145,7 +156,7 @@ class AlpsManager(
      * @throws AlpsException is setting failed
      */
     fun setActivePresentationId(presentationId: Int) {
-        if(presentationSelectionPersistanceEnabled){
+        if(presentationSelectionPersistenceEnabled) {
             userPreferredPresentationId = presentationId
             alpsPeriodMap.values
                 .forEach { alps ->
@@ -178,6 +189,7 @@ class AlpsManager(
         alpsPeriodMap.forEach {
             it.value.release()
         }
+        alpsPeriodMap.clear()
         userPreferredPresentationId = null
     }
 

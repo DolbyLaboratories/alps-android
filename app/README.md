@@ -1,4 +1,4 @@
-# Android ALPS Sample app
+# ALPS Android Sample app
 Sample playback application with ALPS library integrated. Application uses ExoPlayer and doesn't 
 introduce any custom changes to Media3.
 
@@ -82,10 +82,3 @@ The assumptions regarding AC-4 stream are:
 <img src="../docs/images/de_level2_visualization.png" width=200 />
 
 - Total amount of presentations should be between 2 and 6 - result of previous assumptions.
-
-## Known issues
-
-### Content Limitations
-The ALPS library has been tested using **CMAF (Common Media Application Format)** compliant content.
-Using the ALPS library with content that uses features beyond the standardized CMAF feature
-subset may cause unexpected behavior.

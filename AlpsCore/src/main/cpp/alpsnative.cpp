@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024 by Dolby International AB.
+ *                Copyright (C) 2024-2025 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -72,8 +72,8 @@ static void handleNativeError(JNIEnv* env, alps_ret error) {
         case ALPS_RET_E_NEXT_SEGMENT:
             exceptionClassName = "NextSegment";
             break;
-        case ALPS_RET_E_NO_MOVIE_INFO:
-            exceptionClassName = "NoMovieInfo";
+        case ALPS_RET_E_NO_AC4_TRACK:
+            exceptionClassPath = "NoAc4Track";
             break;
         case ALPS_RET_E_PRES_ID_NOT_FOUND:
             exceptionClassName = "PresIdNotFound";
@@ -190,21 +190,102 @@ Java_com_dolby_android_alps_alpsnative_DefaultAlpsNative_getPresentations(JNIEnv
         jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
 
         jclass presentationClz = env->FindClass("com/dolby/android/alps/models/Presentation");
+        jclass labelClz = env->FindClass("com/dolby/android/alps/models/Label");
+        jclass kindClz = env->FindClass("com/dolby/android/alps/models/Kind");
+        jclass floatClz = env->FindClass("java/lang/Float");
+
         jmethodID presentationMid = env->GetMethodID(
                 presentationClz,
-                "<init>", "(ILjava/lang/String;Ljava/lang/String;)V"
+                "<init>",
+                "(ILjava/lang/String;Ljava/util/List;Ljava/util/List;IILjava/lang/Float;)V"
         );
+
+
+jmethodID labelMid = env->GetMethodID(
+                labelClz,
+                "<init>", "(ILjava/lang/String;Ljava/lang/String;Z)V"
+        );
+
+        jmethodID kindMid = env->GetMethodID(
+                kindClz,
+                "<init>", "(Ljava/lang/String;Ljava/lang/String;)V"
+        );
+        jmethodID floatMid = env->GetMethodID(
+                floatClz,
+                "<init>",
+                "(F)V"
+        );
+
         for (int i = 0; i < presentationsCount; i++) {
             alps_presentation nativePresentation = nativePresentationsList[i];
-            jstring label = env->NewStringUTF(nativePresentation.label);
-            jstring extendedLanguage = env->NewStringUTF(nativePresentation.language);
+
+            // Labels
+            jint labelsCount = nativePresentation.labels_count;
+            jobject labelsList = env->NewObject(arrayListClass, arrayListConstructor);
+            for (int label_index = 0; label_index < labelsCount; label_index++) {
+                alps_presentation_label current_label = nativePresentation.labels[label_index];
+                jstring label = env->NewStringUTF(current_label.label);
+                jstring language = env->NewStringUTF(current_label.language);
+                jint label_id = current_label.label_id;
+                jboolean is_group_label = current_label.is_group_label != 0;
+
+                jobject label_obj = env->NewObject(labelClz, labelMid,
+                        label_id,
+                        language,
+                        label,
+                        is_group_label);
+
+                env->CallBooleanMethod(labelsList, arrayListAdd, label_obj);
+                env->DeleteLocalRef(language);
+                env->DeleteLocalRef(label);
+                env->DeleteLocalRef(label_obj);
+
+            }
+
+            // Kinds
+            jint kindsCount = nativePresentation.kinds_count;
+            jobject kindsList = env->NewObject(arrayListClass, arrayListConstructor);
+            for (int kind_index = 0; kind_index < kindsCount; kind_index++) {
+                alps_presentation_kind current_kind = nativePresentation.kinds[kind_index];
+                jstring schemeUri = env->NewStringUTF(current_kind.scheme_uri);
+                jstring value = env->NewStringUTF(current_kind.value);
+
+                jobject kind_obj = env->NewObject(kindClz, kindMid,
+                        schemeUri,
+                        value);
+
+                env->CallBooleanMethod(kindsList, arrayListAdd, kind_obj);
+                env->DeleteLocalRef(schemeUri);
+                env->DeleteLocalRef(value);
+                env->DeleteLocalRef(kind_obj);
+            }
+
+
+
+            jstring extendedLanguage = env->NewStringUTF(nativePresentation.extended_language);
+            jint selectionPriority = nativePresentation.selection_priority;
+            jint audioRenderingIndication = nativePresentation.audio_rendering_indication;
+            jobject dialogGain = nullptr;
+            if (nativePresentation.dialog_gain_present){
+                dialogGain = env->NewObject( floatClz, floatMid, nativePresentation.dialog_gain);
+            }
+
             jobject presentation = env->NewObject(presentationClz, presentationMid,
-                                                  nativePresentation.presentation_id,
-                                                  label,
-                                                  extendedLanguage);
+                                                  nativePresentation.id,
+                                                  extendedLanguage,
+                                                  kindsList,
+                                                  labelsList,
+                                                  selectionPriority,
+                                                  audioRenderingIndication,
+                                                  dialogGain);
 
             env->CallBooleanMethod(presentationsList, arrayListAdd, presentation);
             env->DeleteLocalRef(presentation);
+            if (dialogGain != nullptr) {
+                env-> DeleteLocalRef(dialogGain);
+            }
+            env->DeleteLocalRef(kindsList);
+            env->DeleteLocalRef(labelsList);
         }
         return presentationsList;
     } else {
