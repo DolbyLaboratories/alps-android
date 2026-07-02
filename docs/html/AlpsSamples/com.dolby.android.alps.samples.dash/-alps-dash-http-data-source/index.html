@@ -1,0 +1,333 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>AlpsDashHttpDataSource</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            ALPS Android
+                    </a>            </div>
+            <div class="library-version">3.0.0
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":AlpsSamples:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="AlpsSamples::com.dolby.android.alps.samples.dash/AlpsDashHttpDataSource///PointingToDeclaration//-453865878">
+  <div class="breadcrumbs"><a href="../../index.html">AlpsSamples</a><span class="delimiter">/</span><a href="../index.html">com.dolby.android.alps.samples.dash</a><span class="delimiter">/</span><span class="current">AlpsDashHttpDataSource</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Alps</span><wbr><span>Dash</span><wbr><span>Http</span><wbr><span>Data</span><wbr><span><span>Source</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/util/UnstableApi.html"><span class="token annotation builtin">UnstableApi</span></a></div></div><span class="token keyword">class </span><a href="index.html">AlpsDashHttpDataSource</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">alps<span class="token operator">: </span><a href="../../../AlpsCore/com.dolby.android.alps/-alps/index.html">Alps</a><span class="token punctuation">, </span></span><span class="parameter ">defaultHttpDataSource<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/HttpDataSource.html">HttpDataSource</a></span></span><span class="token punctuation">)</span> : <a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/BaseDataSource.html">BaseDataSource</a>, <a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/HttpDataSource.html">HttpDataSource</a></div><p class="paragraph"><a href="index.html">AlpsDashHttpDataSource</a> is a helper class that intercepts <a href="../../../AlpsSamples/com.dolby.android.alps.samples.dash/-alps-dash-http-data-source/default-http-data-source.html">defaultHttpDataSource</a> calls and adds <a href="../../../AlpsCore/com.dolby.android.alps/-alps/index.html">com.dolby.android.alps.Alps</a> processing.</p><p class="paragraph">AlpsDashHttpDataSource is an alternative for DefaultHttpDataSource. It adds ALPS library processing on top of DefaultHttpDataSource (or other implementation of HttpDataSource interface) operations.</p><p class="paragraph">AlpsDashHttpDataSource should only be used for AC-4 audio streams data sources. For DASH content, use <a href="../-alps-dash-chunk-source-factory/index.html">AlpsDashChunkSourceFactory</a>, which can decide whether <a href="index.html">AlpsDashHttpDataSource</a> should be used for specific chunk.</p><p class="paragraph">Actual ALPS processing is extracted to <a href="../../com.dolby.android.alps.samples/-alps-processing/index.html">com.dolby.android.alps.samples.AlpsProcessing</a> object.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>alps</span></span></u></div></span></div><div><div class="title"><p class="paragraph"><a href="../../../AlpsCore/com.dolby.android.alps/-alps/index.html">com.dolby.android.alps.Alps</a> object that will be used for ALPS processing of AC-4 sources</p></div></div></div></div><div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>default</span><wbr><span>Http</span><wbr><span>Data</span><wbr><span><span>Source</span></span></u></div></span></div><div><div class="title"><p class="paragraph"><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/HttpDataSource.html">androidx.media3.datasource.HttpDataSource</a> implementation, can be Default or some custom if needed. Used for data downloading.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="1793324757%2FConstructors%2F-453865878" anchor-label="AlpsDashHttpDataSource" id="1793324757%2FConstructors%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-alps-dash-http-data-source.html"><span>Alps</span><wbr><span>Dash</span><wbr><span>Http</span><wbr><span>Data</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1793324757%2FConstructors%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">alps<span class="token operator">: </span><a href="../../../AlpsCore/com.dolby.android.alps/-alps/index.html">Alps</a><span class="token punctuation">, </span></span><span class="parameter ">defaultHttpDataSource<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/HttpDataSource.html">HttpDataSource</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1431902318%2FClasslikes%2F-453865878" anchor-label="Factory" id="1431902318%2FClasslikes%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-factory/index.html"><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1431902318%2FClasslikes%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-factory/index.html">Factory</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">alps<span class="token operator">: </span><a href="../../../AlpsCore/com.dolby.android.alps/-alps/index.html">Alps</a><span class="token punctuation">, </span></span><span class="parameter ">defaultHttpDataSourceFactory<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/HttpDataSource.Factory.html">HttpDataSource.Factory</a></span></span><span class="token punctuation">)</span> : <a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/DataSource.Factory.html">DataSource.Factory</a></div><div class="brief "><p class="paragraph">Factory class for <a href="index.html">AlpsDashHttpDataSource</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="919482606%2FFunctions%2F-453865878" anchor-label="addTransferListener" id="919482606%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#919482606%2FFunctions%2F-453865878"><span>add</span><wbr><span>Transfer</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="919482606%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/util/UnstableApi.html"><span class="token annotation builtin">UnstableApi</span></a></div></div><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#919482606%2FFunctions%2F-453865878"><span class="token function">addTransferListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/TransferListener.html">TransferListener</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1215583895%2FFunctions%2F-453865878" anchor-label="bytesTransferred" id="1215583895%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1215583895%2FFunctions%2F-453865878"><span>bytes</span><wbr><span><span>Transferred</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1215583895%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">fun </span><a href="index.html#1215583895%2FFunctions%2F-453865878"><span class="token function">bytesTransferred</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1265415689%2FFunctions%2F-453865878" anchor-label="clearAllRequestProperties" id="-1265415689%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="clear-all-request-properties.html"><span>clear</span><wbr><span>All</span><wbr><span>Request</span><wbr><span><span>Properties</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1265415689%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="clear-all-request-properties.html"><span class="token function">clearAllRequestProperties</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1691600006%2FFunctions%2F-453865878" anchor-label="clearRequestProperty" id="1691600006%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="clear-request-property.html"><span>clear</span><wbr><span>Request</span><wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1691600006%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="clear-request-property.html"><span class="token function">clearRequestProperty</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1480725165%2FFunctions%2F-453865878" anchor-label="close" id="1480725165%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="close.html"><span><span>close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1480725165%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-91038751%2FFunctions%2F-453865878" anchor-label="getResponseCode" id="-91038751%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-response-code.html"><span>get</span><wbr><span>Response</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-91038751%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-response-code.html"><span class="token function">getResponseCode</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-294190106%2FFunctions%2F-453865878" anchor-label="getResponseHeaders" id="-294190106%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-response-headers.html"><span>get</span><wbr><span>Response</span><wbr><span><span>Headers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-294190106%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-response-headers.html"><span class="token function">getResponseHeaders</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-mutable-list/index.html">MutableList</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-923333281%2FFunctions%2F-453865878" anchor-label="getUri" id="-923333281%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-uri.html"><span>get</span><wbr><span><span>Uri</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-923333281%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-uri.html"><span class="token function">getUri</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1121523229%2FFunctions%2F-453865878" anchor-label="open" id="-1121523229%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="open.html"><span><span>open</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1121523229%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="open.html"><span class="token function">open</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">dataSpec<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/DataSpec.html">DataSpec</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1797437509%2FFunctions%2F-453865878" anchor-label="read" id="-1797437509%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="read.html"><span><span>read</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1797437509%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">length<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1140820662%2FFunctions%2F-453865878" anchor-label="setRequestProperty" id="1140820662%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-request-property.html"><span>set</span><wbr><span>Request</span><wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1140820662%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-request-property.html"><span class="token function">setRequestProperty</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-469736201%2FFunctions%2F-453865878" anchor-label="transferEnded" id="-469736201%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-469736201%2FFunctions%2F-453865878"><span>transfer</span><wbr><span><span>Ended</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-469736201%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">fun </span><a href="index.html#-469736201%2FFunctions%2F-453865878"><span class="token function">transferEnded</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="540050226%2FFunctions%2F-453865878" anchor-label="transferInitializing" id="540050226%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#540050226%2FFunctions%2F-453865878"><span>transfer</span><wbr><span><span>Initializing</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="540050226%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">fun </span><a href="index.html#540050226%2FFunctions%2F-453865878"><span class="token function">transferInitializing</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/DataSpec.html">DataSpec</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2119774850%2FFunctions%2F-453865878" anchor-label="transferStarted" id="-2119774850%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-2119774850%2FFunctions%2F-453865878"><span>transfer</span><wbr><span><span>Started</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2119774850%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">fun </span><a href="index.html#-2119774850%2FFunctions%2F-453865878"><span class="token function">transferStarted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/datasource/DataSpec.html">DataSpec</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2026 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

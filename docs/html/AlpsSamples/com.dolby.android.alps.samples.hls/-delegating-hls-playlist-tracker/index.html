@@ -1,0 +1,314 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DelegatingHlsPlaylistTracker</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            ALPS Android
+                    </a>            </div>
+            <div class="library-version">3.0.0
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":AlpsSamples:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="AlpsSamples::com.dolby.android.alps.samples.hls/DelegatingHlsPlaylistTracker///PointingToDeclaration//-453865878">
+  <div class="breadcrumbs"><a href="../../index.html">AlpsSamples</a><span class="delimiter">/</span><a href="../index.html">com.dolby.android.alps.samples.hls</a><span class="delimiter">/</span><span class="current">DelegatingHlsPlaylistTracker</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Delegating</span><wbr><span>Hls</span><wbr><span>Playlist</span><wbr><span><span>Tracker</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/media3/common/util/UnstableApi.html"><span class="token annotation builtin">UnstableApi</span></a></div></div><span class="token keyword">internal </span><span class="token keyword">class </span><a href="index.html">DelegatingHlsPlaylistTracker</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">delegate<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.html">HlsPlaylistTracker</a><span class="token punctuation">, </span></span><span class="parameter ">onMultivariantPlaylist<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMultivariantPlaylist.html">HlsMultivariantPlaylist</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onMediaPlaylist<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMediaPlaylist.html">HlsMediaPlaylist</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.html">HlsPlaylistTracker</a></div><p class="paragraph">A <a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.html">androidx.media3.exoplayer.hls.playlist.HlsPlaylistTracker</a> that delegates all calls to <a href="../../../AlpsSamples/com.dolby.android.alps.samples.hls/-delegating-hls-playlist-tracker/delegate.html">delegate</a> and additionally fires <a href="../../../AlpsSamples/com.dolby.android.alps.samples.hls/-delegating-hls-playlist-tracker/on-multivariant-playlist.html">onMultivariantPlaylist</a> with the <strong>initial playlist URI</strong> and the <a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMultivariantPlaylist.html">androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist</a> as soon as the primary playlist is first refreshed (which is when the multivariant playlist is guaranteed to be available).</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-850416955%2FConstructors%2F-453865878" anchor-label="DelegatingHlsPlaylistTracker" id="-850416955%2FConstructors%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-delegating-hls-playlist-tracker.html"><span>Delegating</span><wbr><span>Hls</span><wbr><span>Playlist</span><wbr><span><span>Tracker</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-850416955%2FConstructors%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">delegate<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.html">HlsPlaylistTracker</a><span class="token punctuation">, </span></span><span class="parameter ">onMultivariantPlaylist<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMultivariantPlaylist.html">HlsMultivariantPlaylist</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token punctuation">, </span></span><span class="parameter ">onMediaPlaylist<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMediaPlaylist.html">HlsMediaPlaylist</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1365769154%2FFunctions%2F-453865878" anchor-label="addListener" id="-1365769154%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1365769154%2FFunctions%2F-453865878"><span>add</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1365769154%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1365769154%2FFunctions%2F-453865878"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.PlaylistEventListener.html">HlsPlaylistTracker.PlaylistEventListener</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-575323180%2FFunctions%2F-453865878" anchor-label="deactivatePlaylistForPlayback" id="-575323180%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="deactivate-playlist-for-playback.html"><span>deactivate</span><wbr><span>Playlist</span><wbr><span>For</span><wbr><span><span>Playback</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-575323180%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="deactivate-playlist-for-playback.html"><span class="token function">deactivatePlaylistForPlayback</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">url<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="405060260%2FFunctions%2F-453865878" anchor-label="excludeMediaPlaylist" id="405060260%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#405060260%2FFunctions%2F-453865878"><span>exclude</span><wbr><span>Media</span><wbr><span><span>Playlist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="405060260%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#405060260%2FFunctions%2F-453865878"><span class="token function">excludeMediaPlaylist</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span></span><span class="parameter ">p1<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1496245821%2FFunctions%2F-453865878" anchor-label="getInitialStartTimeUs" id="-1496245821%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1496245821%2FFunctions%2F-453865878"><span>get</span><wbr><span>Initial</span><wbr><span>Start</span><wbr><span>Time</span><wbr><span><span>Us</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1496245821%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1496245821%2FFunctions%2F-453865878"><span class="token function">getInitialStartTimeUs</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="747188206%2FFunctions%2F-453865878" anchor-label="getMultivariantPlaylist" id="747188206%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#747188206%2FFunctions%2F-453865878"><span>get</span><wbr><span>Multivariant</span><wbr><span><span>Playlist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="747188206%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#747188206%2FFunctions%2F-453865878"><span class="token function">getMultivariantPlaylist</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMultivariantPlaylist.html">HlsMultivariantPlaylist</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="730923092%2FFunctions%2F-453865878" anchor-label="getPlaylistSnapshot" id="730923092%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#730923092%2FFunctions%2F-453865878"><span>get</span><wbr><span>Playlist</span><wbr><span><span>Snapshot</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="730923092%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#730923092%2FFunctions%2F-453865878"><span class="token function">getPlaylistSnapshot</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span></span><span class="parameter ">p1<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsMediaPlaylist.html">HlsMediaPlaylist</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="428714850%2FFunctions%2F-453865878" anchor-label="isLive" id="428714850%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#428714850%2FFunctions%2F-453865878"><span>is</span><wbr><span><span>Live</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="428714850%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#428714850%2FFunctions%2F-453865878"><span class="token function">isLive</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-428608750%2FFunctions%2F-453865878" anchor-label="isSnapshotValid" id="-428608750%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-428608750%2FFunctions%2F-453865878"><span>is</span><wbr><span>Snapshot</span><wbr><span><span>Valid</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-428608750%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-428608750%2FFunctions%2F-453865878"><span class="token function">isSnapshotValid</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="709901387%2FFunctions%2F-453865878" anchor-label="maybeThrowPlaylistRefreshError" id="709901387%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#709901387%2FFunctions%2F-453865878"><span>maybe</span><wbr><span>Throw</span><wbr><span>Playlist</span><wbr><span>Refresh</span><wbr><span><span>Error</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="709901387%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#709901387%2FFunctions%2F-453865878"><span class="token function">maybeThrowPlaylistRefreshError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-614351905%2FFunctions%2F-453865878" anchor-label="maybeThrowPrimaryPlaylistRefreshError" id="-614351905%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-614351905%2FFunctions%2F-453865878"><span>maybe</span><wbr><span>Throw</span><wbr><span>Primary</span><wbr><span>Playlist</span><wbr><span>Refresh</span><wbr><span><span>Error</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-614351905%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-614351905%2FFunctions%2F-453865878"><span class="token function">maybeThrowPrimaryPlaylistRefreshError</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1626331729%2FFunctions%2F-453865878" anchor-label="refreshPlaylist" id="1626331729%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1626331729%2FFunctions%2F-453865878"><span>refresh</span><wbr><span><span>Playlist</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1626331729%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#1626331729%2FFunctions%2F-453865878"><span class="token function">refreshPlaylist</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1523319029%2FFunctions%2F-453865878" anchor-label="removeListener" id="-1523319029%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1523319029%2FFunctions%2F-453865878"><span>remove</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1523319029%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1523319029%2FFunctions%2F-453865878"><span class="token function">removeListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.PlaylistEventListener.html">HlsPlaylistTracker.PlaylistEventListener</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1910957007%2FFunctions%2F-453865878" anchor-label="start" id="-1910957007%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start.html"><span><span>start</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1910957007%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start.html"><span class="token function">start</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialPlaylistUri<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a><span class="token punctuation">, </span></span><span class="parameter ">eventDispatcher<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/source/MediaSourceEventListener.EventDispatcher.html">MediaSourceEventListener.EventDispatcher</a><span class="token punctuation">, </span></span><span class="parameter ">primaryPlaylistListener<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/media3/exoplayer/hls/playlist/HlsPlaylistTracker.PrimaryPlaylistListener.html">HlsPlaylistTracker.PrimaryPlaylistListener</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1805977386%2FFunctions%2F-453865878" anchor-label="stop" id="-1805977386%2FFunctions%2F-453865878" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":AlpsSamples:dokkaHtmlPartial/release" data-filterable-set=":AlpsSamples:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1805977386%2FFunctions%2F-453865878"><span><span>stop</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1805977386%2FFunctions%2F-453865878"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":AlpsSamples:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1805977386%2FFunctions%2F-453865878"><span class="token function">stop</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2026 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

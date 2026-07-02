@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024-2025 by Dolby International AB.
+ *                Copyright (C) 2024-2026 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -31,7 +31,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.dash.manifest.Descriptor
 import com.dolby.android.alps.models.Presentation
 import com.dolby.android.alps.models.Label as AlpsLabel
-import com.dolby.android.alps.samples.AlpsManifestParser
+import com.dolby.android.alps.samples.dash.AlpsDashManifestParser
 
 
 private const val DIALOG_GAIN_MANIFEST_URI = "tag:dolby.com,2018:accessibility:dialogue_gain:2025"
@@ -39,7 +39,7 @@ private const val DIALOG_GAIN_MANIFEST_URI = "tag:dolby.com,2018:accessibility:d
 
 /**
  * Data class representing a DASH <Preselection> tag, parsed form the DASH manifest.
- * @see  [AlpsManifestParser]
+ * @see  [AlpsDashManifestParser]
  */
 @UnstableApi
 data class Preselection

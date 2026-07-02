@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024-2025 by Dolby International AB.
+ *                Copyright (C) 2024-2026 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -29,7 +29,6 @@ package com.dolby.android.alps
 import com.dolby.android.alps.alpsnative.AlpsNative
 import com.dolby.android.alps.alpsnative.DefaultAlpsNative
 import com.dolby.android.alps.alpsnative.AlpsNativeInfo
-import com.dolby.android.alps.logger.AlpsLoggerProvider
 import com.dolby.android.alps.models.Presentation
 import com.dolby.android.alps.utils.AlpsException
 import java.nio.ByteBuffer

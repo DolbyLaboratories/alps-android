@@ -9,9 +9,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        flatDir {
-            dirs("releases")
-        }
     }
 }
 dependencyResolutionManagement {
@@ -23,7 +20,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Dolby ALPS"
-include(":app")
 include(":AlpsCore")
 include(":AlpsSamples")
 include(":CLI")

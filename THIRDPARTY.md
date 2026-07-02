@@ -13,8 +13,5 @@ AlpsCore module:
 AlpsSamples module:
 * Report file: [AlpsSamples/thirdPartyLicenses/thirdPartyLicenses.html](AlpsSamples/thirdPartyLicenses/thirdPartyLicenses.html)
 
-app module:
-* Report file: [app/thirdPartyLicenses/thirdPartyLicenses.html](app/thirdPartyLicenses/thirdPartyLicenses.html)
-
 CLI module:
 * Report file: [CLI/thirdPartyLicenses/thirdPartyLicenses.html](CLI/thirdPartyLicenses/thirdPartyLicenses.html)

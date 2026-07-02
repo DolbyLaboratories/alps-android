@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024-2025 by Dolby International AB.
+ *                Copyright (C) 2024-2026 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -31,13 +31,12 @@ import androidx.media3.exoplayer.dash.manifest.AdaptationSet
 import androidx.media3.exoplayer.dash.manifest.Descriptor
 import androidx.media3.exoplayer.dash.manifest.EventStream
 import androidx.media3.exoplayer.dash.manifest.Period
-import com.dolby.android.alps.samples.models.Preselection
-import com.dolby.android.alps.samples.AlpsManifestParser
+import com.dolby.android.alps.samples.dash.AlpsDashManifestParser
 
 
 /**
     * Extension of the media3 [Period] class, with added info about [Preselection]s.
-    * @see [AlpsManifestParser] for details
+    * @see [AlpsDashManifestParser] for details
  */
 @UnstableApi
 data class PeriodWithPreselections(

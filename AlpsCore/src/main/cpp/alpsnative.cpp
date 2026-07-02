@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024-2025 by Dolby International AB.
+ *                Copyright (C) 2024-2026 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -73,7 +73,7 @@ static void handleNativeError(JNIEnv* env, alps_ret error) {
             exceptionClassName = "NextSegment";
             break;
         case ALPS_RET_E_NO_AC4_TRACK:
-            exceptionClassPath = "NoAc4Track";
+            exceptionClassName = "NoAc4Track";
             break;
         case ALPS_RET_E_PRES_ID_NOT_FOUND:
             exceptionClassName = "PresIdNotFound";

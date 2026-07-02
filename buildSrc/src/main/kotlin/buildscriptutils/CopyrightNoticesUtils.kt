@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024-2025 by Dolby International AB.
+ *                Copyright (C) 2024-2026 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -34,7 +34,7 @@ fun checkAndFixCopyrightNoticesHeaders(
 ) {
     val expectedComment = listOf(
         "/***************************************************************************************************",
-        " *                Copyright (C) 2024-2025 by Dolby International AB.",
+        " *                Copyright (C) 2024-2026 by Dolby International AB.",
         " *                All rights reserved.",
         "",
         " * Redistribution and use in source and binary forms, with or without modification, are permitted",

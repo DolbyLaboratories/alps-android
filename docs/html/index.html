@@ -44,7 +44,7 @@
                     </a>
             </div>
             <div class="library-version">
-2.0.0            </div>
+3.0.0            </div>
         </div>
     </div>
     <div class="navigation-controls">
@@ -62,7 +62,7 @@
   <div class="cover ">
     <div class="cover ">
       <h1 class="">ALPS Android</h1>
-      <p class="paragraph">ALPS (Application Layer Presentation Selection) enables selection of a presentation from a <strong>Dolby</strong> AC-4 bitstream. The <strong>Dolby</strong> AC-4 decoder will subsequently decode only the selected presentation  from that bitstream, ignoring all the other presentations. ALPS Android is a JNI-based wrapper  around the native library for integration with Android playback applications and is built to process  ISOBMFF media segments.</p>
+      <p class="paragraph">ALPS (Application Layer Presentation Selection) enables selection of a presentation from a <strong>Dolby</strong> AC-4 bitstream. The <strong>Dolby</strong> AC-4 decoder will subsequently decode only the selected presentation  from that bitstream, ignoring all the other presentations. ALPS Android is a JNI-based wrapper  around the native library for integration with Android playback applications and is built to process  ISOBMFF media segments. </p>
       <h2 class="">Table of Contents</h2>
       <ul>
         <li>
@@ -91,15 +91,21 @@
         </li>
       </ul>
       <h2 class="">Installation</h2>
-      <p class="paragraph">This library is not published on Maven Central. You have two options to install the library:</p>
-      <ol>
-        <li>
-          <p class="paragraph">Copy the modules you want to use into your project and include it as Gradle modules.</p>
-        </li>
-        <li>
-          <p class="paragraph">Use a prebuilt AAR from <code class="lang-kotlin">&lt;module&gt;/releases</code> and link it to your app.</p>
-        </li>
-      </ol>
+      <p class="paragraph">ALPS Android is published on <a href="https://central.sonatype.com/namespace/com.dolby.android.alps">Maven Central</a>.</p>
+      <p class="paragraph">Make sure <code class="lang-kotlin">mavenCentral()</code> is in your project's repositories.</p>
+      <p class="paragraph">Then add the modules you need to your app's <code class="lang-kotlin">build.gradle.kts</code>:</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    // Core ALPS library — always required<br>    implementation(&quot;com.dolby.android.alps:alps-core:&lt;version&gt;&quot;)<br><br>    // Optional: Media3/ExoPlayer integration helpers and examples<br>    implementation(&quot;com.dolby.android.alps:alps-samples:&lt;version&gt;&quot;)<br>}</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <p class="paragraph">Replace <code class="lang-kotlin">&lt;version&gt;</code> with the latest release (see RELEASENOTES.md) — for example:</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">implementation(&quot;com.dolby.android.alps:alps-core:3.0.0&quot;)</code></pre>
+<span class="top-right-position"><span class="copy-icon"></span>
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+        </span></div>
+      <p class="paragraph"><a href="https://central.sonatype.com/artifact/com.dolby.android.alps/alps-core"></a></p>
       <h3 class="">Modules</h3>
       <p class="paragraph">ALPS Android project consists of:</p>
       <ul>
@@ -108,9 +114,6 @@
         </li>
         <li>
           <p class="paragraph">AlpsSamples/README.md — Media3/ExoPlayer integration helpers and examples.</p>
-        </li>
-        <li>
-          <p class="paragraph">app/README.md — ALPS-integrated sample playback app.</p>
         </li>
         <li>
           <p class="paragraph">CLI/README.md — Headless Android tool for automated AlpsCore testing.</p>
@@ -129,13 +132,21 @@
       <p class="paragraph">This module consists of couple classes/layers that fit into the Media3 architecture. Using all layers together is the most straightforward approach but if it does not suite your app, you may also use just some of them. Going from the outermost layer:</p>
       <ul>
         <li>
-          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsMediaSourceFactory.kt -   Custom MediaSource.Factory that allows using custom DashMediaSource.Factory for DASH content   and DefaultMediaSourceFactory for other content. Allows using AlpsDashChunkSourceFactory.</p>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsMediaSourceFactory.kt -   Custom MediaSource.Factory that allows using custom DashMediaSource.Factory for DASH content   and DefaultMediaSourceFactory for other content. Allows using AlpsDashChunkSourceFactory. For usage example see the code snippet below.</p>
+        </li>
+        <ul>
+          <li>
+            <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/dash/AlpsDashChunkSourceFactory.kt -     Custom DashChunkSource.Factory class that allows applying ALPS for proper DASH chunks (<strong>Dolby</strong> AC-4).</p>
+          </li>
+        </ul>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/dash/AlpsDashHttpDataSource.kt - Custom   implementation of BaseDataSource and implements HttpDataSource interface. It adds ALPS library   processing on top of DefaultHttpDataSource (or other implementation of HttpDataSource interface)   operations. For better separation of concerns, actual ALPS related processing is done in   AlpsProcessing. Used internally by AlpsDashChunkSourceFactory.</p>
         </li>
         <li>
-          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsDashChunkSourceFactory.kt -   Custom DashChunkSource.Factory class that allows applying ALPS for proper DASH chunks (<strong>Dolby</strong> AC-4).</p>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/hls/AlpsHlsHttpDataSource.kt - Similar to AlpsDashHttpDataSource but for HLS content.</p>
         </li>
         <li>
-          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsHttpDataSource.kt - Custom   implementation of BaseDataSource and implements HttpDataSource interface. It adds ALPS library   processing on top of DefaultHttpDataSource (or other implementation of HttpDataSource interface)   operations. For better separation of concerns, actual ALPS related processing is done in   AlpsProcessing.</p>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/hls/AlpsHlsDataSourceFactory.kt - Similar to AlpsDashHttpDataSource but for HLS content.</p>
         </li>
         <li>
           <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsProcessing.kt -    Opens http data source, downloads the whole segment and processes it using the ALPS library:</p>
@@ -147,9 +158,12 @@
           <p class="paragraph">After that it returns requested data portions of the already processed segment.</p>
         </li>
         <li>
-          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManager.kt - allows    simpler multi-period content handling. We recommend to use it instead of using Alps objects    directly. It provides similar API to Alps class but takes care of handling multiple Alps objects   for each period.</p>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/hls/DelegatingHlsPlaylistTracker.kt -    A delegating HlsPlaylistTracker that intercepts playlist refreshes to expose the multivariant and    media playlists (along with the stream URI) via callbacks, enabling AlpsManagerHls to detect AC-4   streams and assign Alps instances to them.</p>
+        </li>
+        <li>
+          <p class="paragraph">AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManager.kt - allows    simpler multi-period content handling. We recommend to use it instead of using Alps objects    directly. It provides similar API to Alps class but takes care of handling multiple Alps objects   for each period. There are separate implementations for DASH   AlpsSamples/src/main/java/com/dolby/android/alps/samples/dash/AlpsManagerDash.kt    and HLS AlpsSamples/src/main/java/com/dolby/android/alps/samples/hls/AlpsManagerHls.kt.</p>
           <div class="sample-container">
-            <pre><code class="block lang-kotlin" theme="idea">val alpsManager = AlpsManager()<br>/** Inject it into AlpsDashChunkSourceFactory when setting ExoPlayer pipeline **/<br>val dashChunkSourceFactory = AlpsDashChunkSourceFactory(<br>    alpsManager = alpsManager,<br>    DefaultHttpDataSource.Factory()<br>)<br>/** Use it during playback **/<br>/* Provide current period index OR set alpsManager as Player's AnalyticsListener */<br>alpsManager.setCurrentPeriodIndex(periodIndex)<br>/* Observe presentations */<br>alpsManager.presentations.collect { presentations -&gt; ... }<br>/* Set desired presentation ID */<br>alpsManager.setActivePresentationId(id)<br><br>/** Release when playback finished **/<br>alpsManager.release()</code></pre>
+            <pre><code class="block lang-kotlin" theme="idea">// ------ SETUP STEP -------<br><br>/** Create instances of AlpsManager <br>  * Note: This sample shows the setup for DASH and HLS streams. You may only need one of them depending on your use case.<br>*/<br>val alpsManagerDash = AlpsManagerDash()<br>val alpsManagerHls = AlpsManagerHls()<br>  <br>/** Inject it into AlpsDashChunkSourceFactory when setting ExoPlayer pipeline **/<br>val alpsChunkSourceFactory = AlpsDashChunkSourceFactory(<br> alpsManager = alpsManagerDash,<br> defaultHttpDataSourceFactory = DefaultHttpDataSource.Factory()<br>)<br><br>val dashMediaSourceFactory = DashMediaSource.Factory(<br>    alpsChunkSourceFactory,<br>    DefaultHttpDataSource.Factory()<br>)<br><br>// Optionally use AlpsDashManifestParser for external (Manifest) signaling support<br>val parser = AlpsDashManifestParser()<br>dashMediaSourceFactory.setManifestParser(parser)<br><br>val defaultMediaSourceFactory = DefaultMediaSourceFactory(context)<br>    .setDataSourceFactory(dataSourceFactory)<br><br>val hlsMediaSourceFactory =<br>    HlsMediaSource.Factory(<br>        AlpsHlsDataSourceFactory(<br>            alpsManagerHls,<br>            DefaultHttpDataSource.Factory(),<br>        ),<br>    )<br>hlsMediaSourceFactory.setPlaylistTrackerFactory(alpsManagerHls.playlistTrackerFactory)<br><br>val adSourceFactory = HlsInterstitialsAdsLoader.AdsMediaSourceFactory(<br>    adsLoader,<br>    binding.playerView,<br>    hlsMediaSourceFactory<br>)<br><br>val mediaSourceFactory = AlpsMediaSourceFactory(<br>    alpsDashFactory = dashMediaSourceFactory,<br>    alpsHlsFactory = adSourceFactory,<br>    defaultFactory = defaultMediaSourceFactory<br>)<br>// Use with ExoPlayer<br>val player = ExoPlayer.Builder(context).setMediaSourceFactory(mediaSourceFactory).build()<br><br>// Finish setting up player and prepare it with media item as usual<br><br>// ------ PLAYBACK STEP -------<br>/* Provide current period index/stream URI OR set alpsManager as Player's AnalyticsListener */<br><br>// OPTION 1: alpsManagerDash.setCurrentPeriodIndex(periodIndex)<br>//           alpsManagerHls.setCurrentStreamUri(uri)<br><br>// OPTION 2: player.addAnalyticsListener(alpsManagerDash)<br>//           player.addAnalyticsListener(alpsManagerHls)<br><br>/* Observe presentations */<br>alpsManagerDash.isobmffPresentations.collect { presentations -&gt; ... }<br>alpsManagerHls.isobmffPresentations.collect { presentations -&gt; ... }<br>alpsManagerHls.playlistPresentations.collect { presentations -&gt; ... }<br>/* Set desired presentation ID */<br>alpsManagerDash.setActivePresentationId(id)<br>alpsManagerHls.setActivePresentationId(id)<br><br>// ------ CLEANUP STEP -------<br><br>alpsManagerDash.release()<br>alpsManagerHls.release()</code></pre>
 <span class="top-right-position"><span class="copy-icon"></span>
               <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
             </span></div>
@@ -185,12 +199,13 @@
         </span></div>
       <h3 class="">External signaling</h3>
       <p class="paragraph">ALPS supports presentation signaling by external means, typically done via MPEG-DASH manifest.  Parsing this data is out-of-scope for the ALPS library and must be performed on application level.  In such a case ALPS still allows to set the active presentation using <code class="lang-kotlin">setActivePresentationId</code>. The  <code class="lang-kotlin">getPresentations</code> method can be used to validate whether the presentations from the external source match those from the ISOBMFF init segment. Note that ALPS will always validate the selected  presentation ID against the presentation IDs found in the TOC and disable processing if the  requested ID is not available in the TOC.</p>
-      <p class="paragraph">AlpsSamples module provide a helper class AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsManifestParser.kt which is an extension of Media3's DashManifestParser that adds support for parsing DASH manifest  <Preselection> elements. This custom parser extends the standard DASH manifest parsing to handle  additional metadata that can be used for content preselection. The parser creates  AlpsSamples/src/main/java/com/dolby/android/alps/samples/models/PeriodWithPreselections.kt objects instead of standard Period objects, allowing applications to access preselection metadata</p>
+      <p class="paragraph">AlpsSamples module provide a helper class AlpsSamples/src/main/java/com/dolby/android/alps/samples/dash/AlpsDashManifestParser.kt which is an extension of Media3's DashManifestParser that adds support for parsing DASH manifest  <Preselection> elements. This custom parser extends the standard DASH manifest parsing to handle  additional metadata that can be used for content preselection. The parser creates  AlpsSamples/src/main/java/com/dolby/android/alps/samples/models/PeriodWithPreselections.kt objects instead of standard Period objects, allowing applications to access preselection metadata</p>
       <h2 class="">Known limitations</h2>
       <h3 class="">CMAF compliance</h3>
       <p class="paragraph">The ALPS library has been tested using <strong>CMAF (Common Media Application Format)</strong> compliant content. Using the ALPS library with content that uses features beyond the standardized CMAF feature subset might cause unexpected behavior.</p>
       <h3 class=""><strong>Dolby</strong> AC-4 content requirements</h3>
       <p class="paragraph">ALPS functionality depends on parsing and modifying <strong>Dolby</strong> AC-4 TOC. DRM protected content may be compatible with ALPS if the TOC is left unencrypted. In that case, only the audio substreams are encrypted.</p>
+      <p class="paragraph">Additionally, the helper classes provided in the AlpsSamples module are build on the assumption, that there is only one AC-4 Adaptation Set (DASH) or rendition (HLS) available at a time.  Using them with content that breaks this assumption might cause unexpected behavior.</p>
       <h3 class="">Buffer management</h3>
       <p class="paragraph">Devices typically buffer some audio to ensure a good playback experience in cases of varying network conditions. These buffers need to be flushed when changing the presentation to apply the changed audio configuration quickly after the user selection has been made. Flushing buffers should ideally be provided by the player and should be triggered when a different presentation is selected.</p>
       <h2 class="">Support / Contact</h2>
@@ -248,22 +263,11 @@
           <div><span class="brief-comment"></span></div>
         </div>
       </div>
-<a data-name="1551721612%2FMain%2F0" anchor-label="app" id="1551721612%2FMain%2F0" data-filterable-set=""></a>
-      <div class="table-row">
-        <div class="main-subrow ">
-          <div class="w-100"><span class="inline-flex">
-              <div><a href="app/index.html">app</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1551721612%2FMain%2F0"></span>
-                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-              </span></span></div>
-          <div><span class="brief-comment"></span></div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
       <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2026 Copyright</span><span
                 class="pull-right"><span>Generated by </span><a
                 href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
       </div>

@@ -1,5 +1,5 @@
 /***************************************************************************************************
- *                Copyright (C) 2024-2025 by Dolby International AB.
+ *                Copyright (C) 2024-2026 by Dolby International AB.
  *                All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -37,20 +37,23 @@ import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 
 /**
- * [AlpsMediaSourceFactory] is a helper class that allows using custom [DashMediaSource.Factory] for
- * DASH content.
+ * [AlpsMediaSourceFactory] is a helper class that allows using custom [MediaSource.Factory] for
+ * DASH and HLS content
  *
  * @param alpsDashFactory Factory that will be used to create media source for DASH content type
+ * @param alpsHlsFactory Factory that will be used to create media source for HLS content type
  * @param defaultFactory Factory that will be used to create media source for non-DASH content types
  */
 @UnstableApi
 class AlpsMediaSourceFactory(
     private val alpsDashFactory: DashMediaSource.Factory,
+    private val alpsHlsFactory: MediaSource.Factory,
     private val defaultFactory: MediaSource.Factory,
-): MediaSource.Factory {
+) : MediaSource.Factory {
     override fun createMediaSource(mediaItem: MediaItem): MediaSource {
         return when (Util.inferContentType(mediaItem.localConfiguration?.uri ?: Uri.EMPTY)) {
             C.CONTENT_TYPE_DASH -> alpsDashFactory.createMediaSource(mediaItem)
+            C.CONTENT_TYPE_HLS -> alpsHlsFactory.createMediaSource(mediaItem)
             else -> defaultFactory.createMediaSource(mediaItem)
         }
     }
@@ -59,9 +62,17 @@ class AlpsMediaSourceFactory(
         return (defaultFactory.supportedTypes + C.CONTENT_TYPE_DASH).distinct().toIntArray()
     }
 
-    override fun setDrmSessionManagerProvider(drmSessionManagerProvider: DrmSessionManagerProvider) =
+    override fun setDrmSessionManagerProvider(drmSessionManagerProvider: DrmSessionManagerProvider) : MediaSource.Factory {
+        alpsDashFactory.setDrmSessionManagerProvider(drmSessionManagerProvider)
+        alpsHlsFactory.setDrmSessionManagerProvider(drmSessionManagerProvider)
         defaultFactory.setDrmSessionManagerProvider(drmSessionManagerProvider)
+        return this
+    }
 
-    override fun setLoadErrorHandlingPolicy(loadErrorHandlingPolicy: LoadErrorHandlingPolicy) =
+    override fun setLoadErrorHandlingPolicy(loadErrorHandlingPolicy: LoadErrorHandlingPolicy) : MediaSource.Factory {
+        alpsDashFactory.setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
+        alpsHlsFactory.setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
         defaultFactory.setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
+        return this
+    }
 }

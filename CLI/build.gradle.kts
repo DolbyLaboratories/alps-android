@@ -1,5 +1,3 @@
-import buildscriptutils.Module
-import buildscriptutils.getLibraryAarFilePath
 import buildscriptutils.getVersionCode
 import buildscriptutils.getVersionName
 
@@ -9,17 +7,17 @@ plugins {
     alias(libs.plugins.license)
 }
 
-private val appVersionName = getVersionName(rootDir, Module.CLI)
-private val appVersionCode = getVersionCode(rootDir, Module.CLI)
+private val appVersionName = getVersionName(rootDir)
+private val appVersionCode = getVersionCode(rootDir)
 
 android {
     namespace = "com.dolby.android.alps.cli"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.dolby.android.alps.cli"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = appVersionCode
         versionName = appVersionName
 
@@ -53,9 +51,7 @@ dependencies {
     implementation(libs.androidx.work.ktx)
     implementation(libs.napier)
 
-    /* Use prebuilt library module */
-    debugImplementation(files(getLibraryAarFilePath(rootDir, "AlpsCore", "debug")))
-    releaseImplementation(files(getLibraryAarFilePath(rootDir,"AlpsCore", "release")))
+    implementation(project(":AlpsCore"))
 }
 
 licenseReport {

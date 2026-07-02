@@ -1,4 +1,3 @@
-import buildscriptutils.Module
 import buildscriptutils.getVersionName
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -9,13 +8,14 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.junit5)
     alias(libs.plugins.license)
+    alias(libs.plugins.maven.publish)
 }
 
-private val libraryVersionName = getVersionName(rootDir, Module.LIBRARY)
+private val libraryVersionName = getVersionName(rootDir)
 
 android {
     namespace = "com.dolby.android.alps"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -120,3 +120,4 @@ licenseReport {
 
     showVersions = true
 }
+

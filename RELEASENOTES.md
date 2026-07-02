@@ -1,3 +1,37 @@
+# 3.0.0
+
+This release includes the following changes since the 2.0.0
+
+### Features
+
+- Updated ALPS Native dependency to v3.0.0
+- Support HLS
+  - Updated `media3` dependency from `1.4.1` to `1.8.0`, adding support for `media3-exoplayer-hls`.
+  - Structural changes:
+      - Moved `AlpsDashChunkSourceFactory` to `com.dolby.android.alps.samples.dash` package.
+      - Renamed `AlpsHttpDataSource` to `AlpsDashHttpDataSource` and moved to `com.dolby.android.alps.samples.dash` package
+      - Renamed `AlpsManifestParser` to `AlpsDashManifestParser` and moved to  `com.dolby.android.alps.samples.dash` package
+      - `AlpsManager` is now an interface, with two concrete implementations `AlpsManagerDash` (DASH) and `AlpsManagerHls` (HLS), each in their respective packages.
+      - Renamed the `presentations` flow exposed by the `AlpsManager` to `isobmffPresentations`
+  - HLS Support:
+      - Introduced `AlpsHlsHttpDataSource`, `AlpsHlsDataSourceFactory`, and `AlpsManagerHls` for ALPS processing in HLS streams
+      - Added `DelegatingHlsPlaylistTracker` to monitor playlist updates and detect AC-4 renditions
+      - `AlpsManagerHls` handles HLS streams with support for interstitials.
+  - API Updates:
+      - `AlpsMediaSourceFactory` now supports HLS via new `alpsHlsFactory` parameter. For usage examples check README.md
+- Added an API to get the active presentation ID from AlpsManager
+- Increased `compileSdk` and `targetSdk` from 34 to 35 across all modules.
+
+
+### BREAKING CHANGES
+
+- This update breaks compatibility with streams using 16-bit ISOBMFF Dialog Gain signalling
+
+### Bug Fixes
+
+- Prevent a race condition in releaseUnusedAlpsObjects
+- Removed `app` module - support for sample application has been dropped
+
 # 2.0.0
 
 This release includes the following changes since the 1.0.0

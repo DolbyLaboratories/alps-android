@@ -1,4 +1,3 @@
-import buildscriptutils.Module
 import buildscriptutils.getVersionName
 import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 
@@ -7,13 +6,14 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.junit5)
     alias(libs.plugins.license)
+    alias(libs.plugins.maven.publish)
 }
 
-private val libraryVersionName = getVersionName(rootDir, Module.LIBRARY)
+private val libraryVersionName = getVersionName(rootDir)
 
 android {
     namespace = "com.dolby.android.alps.samples"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -48,6 +48,7 @@ android {
 
 dependencies {
     implementation(project(":AlpsCore"))
+    implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.kotlinx.coroutines.core)
@@ -80,3 +81,4 @@ licenseReport {
 
     showVersions = true
 }
+
