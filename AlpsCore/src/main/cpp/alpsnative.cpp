@@ -32,7 +32,7 @@
 
 extern "C"
 {
-    #include "dlb_alps_native.h"
+    #include "dlb_alps_native/dlb_alps_native.h"
 }
 
 static std::mutex mtx;
@@ -216,7 +216,7 @@ jmethodID labelMid = env->GetMethodID(
                 "(F)V"
         );
 
-        for (int i = 0; i < presentationsCount; i++) {
+        for (size_t i = 0; i < presentationsCount; i++) {
             alps_presentation nativePresentation = nativePresentationsList[i];
 
             // Labels

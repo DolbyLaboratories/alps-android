@@ -4,6 +4,7 @@ $dokka.linkExtension:html
 module:AlpsCore
 com.dolby.android.alps
 com.dolby.android.alps.alpsnative
+com.dolby.android.alps.annotations
 com.dolby.android.alps.logger
 com.dolby.android.alps.models
 com.dolby.android.alps.utils

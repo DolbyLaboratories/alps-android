@@ -1,3 +1,22 @@
+# 3.1.0
+
+This release includes the following changes since the 3.0.0
+
+### Features
+
+- Updated ALPS Native dependency to v3.1.0
+  - Supports segments with multiple fragments (multiple `moof`/`mdat` pairs in one media segment)
+- Support for content with multiple tracks (DASH and HLS)
+
+### Bug Fixes
+
+- Fix selection persistence for DASH content that signals presentations only in the manifest
+
+### Changes
+
+- Updated `media3` dependency from `1.8.0` to `1.11.1`
+- ALPS Native is now built from source through `repos/dlb_alps_native` submodule
+
 # 3.0.0
 
 This release includes the following changes since the 2.0.0

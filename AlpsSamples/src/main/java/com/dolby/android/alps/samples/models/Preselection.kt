@@ -45,6 +45,7 @@ private const val DIALOG_GAIN_MANIFEST_URI = "tag:dolby.com,2018:accessibility:d
 data class Preselection
     (
     val id: String,
+    val preselectionComponents: String,
     val labels: List<Label>,
     val lang: String?,
     val tag: Int,

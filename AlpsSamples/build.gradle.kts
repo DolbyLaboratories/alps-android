@@ -14,6 +14,7 @@ private val libraryVersionName = getVersionName(rootDir)
 android {
     namespace = "com.dolby.android.alps.samples"
     compileSdk = 35
+    ndkVersion = libs.versions.ndk.get()
 
     defaultConfig {
         minSdk = 28
@@ -30,7 +31,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -53,7 +54,7 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.kotlinx.coroutines.core)
 
-    //Tests
+    // Tests
     testImplementation(libs.jupiter.api)
     testRuntimeOnly(libs.jupiter.engine)
     testImplementation(libs.jupiter.params)

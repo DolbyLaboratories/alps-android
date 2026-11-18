@@ -190,6 +190,10 @@ class AlpsDashManifestParser : DashManifestParser() {
             Integer.parseInt(xpp.getAttributeValue(null, "tag"))
         }.getOrDefault(-1)
 
+        val preselectionComponents: String = runCatching {
+            xpp.getAttributeValue(null, "preselectionComponents")
+        }.getOrDefault("")
+
         val selectionPriority: Int = parseInt(xpp, "selectionPriority", 1)
 
         val audioChannelConfiguration = ArrayList<Descriptor>()
@@ -222,6 +226,7 @@ class AlpsDashManifestParser : DashManifestParser() {
         } while (!XmlPullParserUtil.isEndTag(xpp, "Preselection"))
         return Preselection(
             id = id,
+            preselectionComponents = preselectionComponents,
             labels = labels,
             lang = lang,
             tag = presentationTag,

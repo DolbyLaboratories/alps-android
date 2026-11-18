@@ -32,10 +32,30 @@ dependencies {
 ```
 Replace `<version>` with the latest release (see [Release notes](RELEASENOTES.md)) — for example:
 ```kotlin
-implementation("com.dolby.android.alps:alps-core:3.0.0")
+implementation("com.dolby.android.alps:alps-core:3.1.0")
 ```
 
 [![ALPS Android](https://maven-badges.sml.io/sonatype-central/com.dolby.android.alps/alps-core/badge.svg?subject=ALPS%20Android)](https://central.sonatype.com/artifact/com.dolby.android.alps/alps-core)
+
+### Building from source
+The native part of ALPS is built from source. The
+[ALPS Native](https://github.com/DolbyLaboratories/alps-native) library is included as a git
+submodule in `repos/dlb_alps_native`, so clone the repository together with its submodules:
+```shell
+git clone --recursive https://github.com/DolbyLaboratories/alps-android.git
+```
+For an existing clone, run `git submodule update --init --recursive`. Gradle also initializes the
+submodule automatically on the first build of a git checkout. Source archives downloaded without git
+history (e.g. GitHub "Download ZIP") do not contain the submodule — use `git clone` instead.
+
+Requirements:
+- JDK 17 or newer
+- Android SDK with NDK `28.2.13676358` and CMake `3.22.1`
+
+Build all modules with:
+```shell
+./gradlew assemble
+```
 
 ### Modules
 ALPS Android project consists of:
@@ -164,7 +184,8 @@ just some of them. Going from the outermost layer:
   /* Observe presentations */
   alpsManagerDash.isobmffPresentations.collect { presentations -> ... }
   alpsManagerHls.isobmffPresentations.collect { presentations -> ... }
-  alpsManagerHls.playlistPresentations.collect { presentations -> ... }
+  // Experimental API, see "Experimental APIs" below
+  alpsManagerHls.playlistPresentationsForActiveRendition.collect { presentations -> ... }
   /* Set desired presentation ID */
   alpsManagerDash.setActivePresentationId(id)
   alpsManagerHls.setActivePresentationId(id)
@@ -174,6 +195,22 @@ just some of them. Going from the outermost layer:
   alpsManagerDash.release()
   alpsManagerHls.release()
   ```
+
+#### Multi-track content
+**DASH:** AlpsManagerDash and AlpsDashChunkSourceFactory support content with multiple audio
+Adaptation Sets per Period, including multiple AC-4 Adaptation Sets or a mix of AC-4 and non-AC-4
+Adaptation Sets. ALPS processing is applied only to the AC-4 track currently selected in the player,
+using a single ALPS instance per Period. When the player switches to a different AC-4 Adaptation
+Set, the exposed presentations are updated from the newly loaded init segment. Manifest-signalled
+preselections expose `preselectionComponents`, which can be used to map each preselection to its
+Adaptation Set(s).
+
+**HLS:** AlpsManagerHls supports streams with multiple audio renditions, including multiple AC-4
+renditions or a mix of AC-4 and non-AC-4 renditions. The exposed presentations follow the audio
+rendition currently selected in the player, which requires AlpsManagerHls to be registered as the
+player's `AnalyticsListener` (OPTION 2 above). Until the selected rendition is known,
+`isobmffPresentations` and `setActivePresentationId` use the first AC-4 rendition, while
+`playlistPresentationsForActiveRendition` contains presentations of all renditions.
 
 ### Logging
 ALPS library logs can be controlled by the application. By default library will not print any logs. 
@@ -214,6 +251,20 @@ If [AlpsManager](AlpsSamples/src/main/java/com/dolby/android/alps/samples/AlpsMa
 AlpsSamples module is used, it can be treated as a library API.
 
 Detailed API description can be found in [HTML code documentation](docs) or in the code directly.
+
+### Experimental APIs
+APIs annotated with
+[ExperimentalAlpsApi](AlpsCore/src/main/java/com/dolby/android/alps/annotations/ExperimentalAlpsApi.kt)
+may change or be removed in any future release without a deprecation cycle. Using such an API 
+produces a compiler warning unless you opt in, either with `@OptIn(ExperimentalAlpsApi::class)` on
+the calling declaration or for a whole module with the compiler argument
+`-opt-in=com.dolby.android.alps.annotations.ExperimentalAlpsApi`.
+
+Currently, the HLS playlist presentations exposed by
+[AlpsManagerHls](AlpsSamples/src/main/java/com/dolby/android/alps/samples/hls/AlpsManagerHls.kt)
+(`playlistPresentationsForActiveRendition` and the deprecated `playlistPresentations`) are
+experimental, as the definition of **Dolby** AC-4 presentation signaling in HLS playlists is
+not final yet.
 
 ## **Dolby** AC-4 presentation signaling
 ALPS supports two signaling methods:
@@ -284,10 +335,6 @@ ALPS functionality depends on parsing and modifying **Dolby** AC-4 TOC. DRM prot
 compatible with ALPS if the TOC is left unencrypted. In that case, only the audio substreams are
 encrypted.
 
-Additionally, the helper classes provided in the AlpsSamples module are build on the assumption,
-that there is only one AC-4 Adaptation Set (DASH) or rendition (HLS) available at a time. 
-Using them with content that breaks this assumption might cause unexpected behavior.
-
 ### Buffer management
 Devices typically buffer some audio to ensure a good playback experience in cases of varying network
 conditions. These buffers need to be flushed when changing the presentation to apply the changed
@@ -300,7 +347,9 @@ be provided by the player and should be triggered when a different presentation 
 
 ## License & third-party
 - License: see [LICENSE.md](LICENSE.md)
-- Third-party notices: see `thirdPartyLicenses/` directories in modules.
+- Third-party notices: see [THIRDPARTY.md](THIRDPARTY.md) and the `thirdPartyLicenses/` directories
+  in modules. ALPS Native third-party notices are listed in
+  [NativeLibrary_THIRDPARTY.md](AlpsCore/thirdPartyLicenses/NativeLibrary_THIRDPARTY.md).
 
 ## Release notes
 See [RELEASENOTES.md](RELEASENOTES.md)

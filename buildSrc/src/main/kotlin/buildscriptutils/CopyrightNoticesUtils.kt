@@ -61,14 +61,12 @@ fun checkAndFixCopyrightNoticesHeaders(
         "",
     )
     val filesExtensions = listOf("kt", "cpp", "h")
-    val excludedDir = "android-sdk-linux"
+    val excludedDirs = setOf("android-sdk-linux", "repos", "build", ".cxx", ".gradle")
     val filesModified = mutableListOf<File>()
 
     projectRootDir.walkTopDown()
-        .filter { file ->
-            filesExtensions.contains(file.extension) &&
-                    file.relativeTo(projectRootDir).startsWith(File(excludedDir)).not()
-        }
+        .onEnter { dir -> dir == projectRootDir || dir.name !in excludedDirs }
+        .filter { file -> filesExtensions.contains(file.extension) }
         .forEach { file ->
             val firstLines = file.readLines().take(expectedComment.size)
 

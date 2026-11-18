@@ -1,0 +1,3 @@
+[submodule "dlb_alps_native"]
+	path = repos/dlb_alps_native
+	url = https://github.com/DolbyLaboratories/alps-native.git

@@ -32,17 +32,19 @@ import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist
 import androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist
 import androidx.media3.exoplayer.hls.playlist.HlsPlaylistTracker
 import androidx.media3.exoplayer.source.MediaSourceEventListener
+import androidx.media3.exoplayer.upstream.BandwidthMeter
 
 /**
  * A [androidx.media3.exoplayer.hls.playlist.HlsPlaylistTracker] that delegates all calls to [delegate] and additionally fires
- * [onMultivariantPlaylist] with the **initial playlist URI** and the [androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist]
+ * [onMultivariantPlaylist] with itself, the **initial playlist URI** and the [androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist]
  * as soon as the primary playlist is first refreshed (which is when the multivariant playlist
  * is guaranteed to be available).
  */
 @UnstableApi
 internal class DelegatingHlsPlaylistTracker(
     private val delegate: HlsPlaylistTracker,
-    private val onMultivariantPlaylist: (Uri, HlsMultivariantPlaylist) -> Unit,
+    private val onMultivariantPlaylist:
+        (tracker: HlsPlaylistTracker, initialPlaylistUri: Uri, HlsMultivariantPlaylist) -> Unit,
     private val onMediaPlaylist: ((Uri, HlsMediaPlaylist) -> Unit)? = null,
 ) : HlsPlaylistTracker by delegate {
 
@@ -50,17 +52,20 @@ internal class DelegatingHlsPlaylistTracker(
         initialPlaylistUri: Uri,
         eventDispatcher: MediaSourceEventListener.EventDispatcher,
         primaryPlaylistListener: HlsPlaylistTracker.PrimaryPlaylistListener,
+        bandwidthMeter: BandwidthMeter,
     ) {
         delegate.start(
             initialPlaylistUri,
             eventDispatcher,
-        ) { mediaPlaylist ->
-            primaryPlaylistListener.onPrimaryPlaylistRefreshed(mediaPlaylist)
-            delegate.multivariantPlaylist?.let {
-                onMultivariantPlaylist(initialPlaylistUri, it)
-            }
-            onMediaPlaylist?.invoke(initialPlaylistUri, mediaPlaylist)
-        }
+            { mediaPlaylist ->
+                primaryPlaylistListener.onPrimaryPlaylistRefreshed(mediaPlaylist)
+                delegate.multivariantPlaylist?.let {
+                    onMultivariantPlaylist(this, initialPlaylistUri, it)
+                }
+                onMediaPlaylist?.invoke(initialPlaylistUri, mediaPlaylist)
+            },
+            bandwidthMeter,
+        )
     }
 
     override fun deactivatePlaylistForPlayback(url: Uri) {

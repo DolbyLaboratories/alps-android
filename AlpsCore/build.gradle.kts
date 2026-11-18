@@ -16,6 +16,7 @@ private val libraryVersionName = getVersionName(rootDir)
 android {
     namespace = "com.dolby.android.alps"
     compileSdk = 35
+    ndkVersion = libs.versions.ndk.get()
 
     defaultConfig {
         minSdk = 28
@@ -49,7 +50,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -72,7 +73,7 @@ android {
 }
 
 dependencies {
-    //Tests
+    // Tests
     testImplementation(libs.jupiter.api)
     testRuntimeOnly(libs.jupiter.engine)
     testImplementation(libs.jupiter.params)
@@ -90,7 +91,7 @@ tasks.withType<DokkaTask>().configureEach {
                     DokkaConfiguration.Visibility.PUBLIC,
                     DokkaConfiguration.Visibility.PROTECTED,
                     DokkaConfiguration.Visibility.INTERNAL,
-                    )
+                ),
             )
         }
     }

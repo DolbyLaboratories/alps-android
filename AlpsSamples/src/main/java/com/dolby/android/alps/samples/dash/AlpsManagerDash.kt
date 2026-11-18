@@ -131,6 +131,9 @@ class AlpsManagerDash(
      */
     private val alpsPeriodMap = ConcurrentHashMap<Int, Alps>()
     private val alpsPeriodMapLock = Any()
+
+    internal var alpsFactory: () -> Alps = { Alps() }
+
     /**
      * Helper for getting Alps object assigned for currently playing period
      */
@@ -143,7 +146,7 @@ class AlpsManagerDash(
     fun getAlps(periodIndex: Int): Alps? {
         return alpsPeriodMap.getOrElse(periodIndex) {
             try {
-                Alps().apply {
+                alpsFactory().apply {
                     setPresentationsChangedCallback(object : PresentationsChangedCallback {
                         override fun onPresentationsChanged() {
                             if (presentationSelectionPersistenceEnabled) {
@@ -154,6 +157,9 @@ class AlpsManagerDash(
                     })
                 }.also { newAlps ->
                     alpsPeriodMap[periodIndex] = newAlps
+                    if (presentationSelectionPersistenceEnabled) {
+                        userPreferredPresentationId?.let { newAlps.setActivePresentationId(it) }
+                    }
                 }
             } catch (e: AlpsException) {
                 AlpsLoggerProvider.e("AlpsManager failed to create Alps object. Error: ${e.message}")
@@ -200,6 +206,7 @@ class AlpsManagerDash(
             it.value.release()
         }
         alpsPeriodMap.clear()
+        _presentations.update { emptyList() }
         userPreferredPresentationId = null
     }
 

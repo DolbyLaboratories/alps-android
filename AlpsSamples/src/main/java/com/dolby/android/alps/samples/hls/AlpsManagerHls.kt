@@ -27,6 +27,7 @@
 package com.dolby.android.alps.samples.hls
 
 import android.net.Uri
+import androidx.media3.common.C
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
@@ -36,8 +37,10 @@ import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.hls.playlist.DefaultHlsPlaylistTracker
 import androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist
 import androidx.media3.exoplayer.hls.playlist.HlsPlaylistTracker
+import androidx.media3.exoplayer.hls.playlist.HlsRedundantGroup
 import com.dolby.android.alps.Alps
 import com.dolby.android.alps.PresentationsChangedCallback
+import com.dolby.android.alps.annotations.ExperimentalAlpsApi
 import com.dolby.android.alps.logger.AlpsLoggerProvider
 import com.dolby.android.alps.models.Label
 import com.dolby.android.alps.models.Presentation
@@ -47,25 +50,69 @@ import com.dolby.android.alps.samples.models.AlpsPresentationWrapper
 import com.dolby.android.alps.utils.AlpsException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onErrorReturn
 import kotlinx.coroutines.flow.update
-import kotlin.collections.iterator
+import kotlin.to
 
 @UnstableApi
 class AlpsManagerHls(
-    val presentationSelectionPersistenceEnabled: Boolean = true
+    val presentationSelectionPersistenceEnabled: Boolean = true,
 ) : AlpsManager {
+    companion object {
+        /**
+         * List of [AnalyticsListener] events that may indicate a change in the active audio
+         * rendition.
+         */
+        private val renditionChangedEvents = listOf(
+            AnalyticsListener.EVENT_TRACKS_CHANGED,
+            AnalyticsListener.EVENT_POSITION_DISCONTINUITY,
+            AnalyticsListener.EVENT_TIMELINE_CHANGED,
+        )
+
+        /**
+         * List of [AnalyticsListener] events that may indicate a change in the active stream
+         * (content ↔ interstitial).
+         */
+        private val activeStreamUriChangedEvents = listOf(
+            AnalyticsListener.EVENT_POSITION_DISCONTINUITY,
+            AnalyticsListener.EVENT_TIMELINE_CHANGED,
+            AnalyticsListener.EVENT_IS_PLAYING_CHANGED,
+        )
+    }
+
     private val _isobmffPresentations =
         MutableStateFlow<List<AlpsPresentationWrapper>>(emptyList())
     override val isobmffPresentations: StateFlow<List<AlpsPresentationWrapper>> =
         _isobmffPresentations
 
     private val _playlistPresentations =
-        MutableStateFlow<Map<Uri,List<AlpsPresentationWrapper>>>(emptyMap())
+        MutableStateFlow<Map<Uri, List<AlpsPresentationWrapper>>>(emptyMap())
+
     /**
      * State keeping lists of presentations signalled in HLS playlists for all loaded streams
      */
-    val playlistPresentations: StateFlow<Map<Uri,List<AlpsPresentationWrapper>>> = _playlistPresentations
+    @Deprecated(
+        message = "playlistPresentations merges presentations from all audio renditions, " +
+                "use playlistPresentationsForActiveRendition instead",
+        replaceWith = ReplaceWith("playlistPresentationsForActiveRendition"),
+        level = DeprecationLevel.WARNING,
+    )
+    @ExperimentalAlpsApi(reason = "Dolby AC-4 presentations signalling in HLS playlists " +
+            "definition is experimental")
+    val playlistPresentations: StateFlow<Map<Uri, List<AlpsPresentationWrapper>>> =
+        _playlistPresentations
+
+    private val _playlistPresentationsForActiveRendition =
+        MutableStateFlow<Map<Uri, List<AlpsPresentationWrapper>>>(emptyMap())
+
+    /**
+     * State keeping lists of presentations signalled in HLS playlists for all loaded streams.
+     * Presentations list will only contain presentations for the currently selected audio rendition,
+     * or presentations of all renditions if no selection is known yet.
+     */
+    @ExperimentalAlpsApi(reason = "Dolby AC-4 presentations signalling in HLS playlists " +
+            "definition is experimental")
+    val playlistPresentationsForActiveRendition: StateFlow<Map<Uri, List<AlpsPresentationWrapper>>> =
+        _playlistPresentationsForActiveRendition
 
     private var _activeStreamUri = MutableStateFlow<Uri?>(null)
 
@@ -86,21 +133,21 @@ class AlpsManagerHls(
      * a reference to the tracker for [resolveAlpsForSegmentUri] lookups.
      */
     val playlistTrackerFactory: HlsPlaylistTracker.Factory =
-        HlsPlaylistTracker.Factory { dataSourceFactory, loadErrorHandlingPolicy, playlistParserFactory, cmcdConfiguration ->
-            val realTracker = DefaultHlsPlaylistTracker.FACTORY.createTracker(
+        HlsPlaylistTracker.Factory { dataSourceFactory, loadErrorHandlingPolicy, playlistParserFactory, cmcdConfiguration, downloadExecutorSupplier ->
+            val realTracker = delegateTrackerFactory.createTracker(
                 dataSourceFactory,
                 loadErrorHandlingPolicy,
                 playlistParserFactory,
                 cmcdConfiguration,
+                downloadExecutorSupplier,
             )
             DelegatingHlsPlaylistTracker(
                 realTracker,
-                onMultivariantPlaylist = { initialPlaylistUri, multivariantPlaylist ->
+                onMultivariantPlaylist = { tracker, initialPlaylistUri, multivariantPlaylist ->
+                    streamPlaylistTrackers[initialPlaylistUri] = tracker
                     onMultivariantPlaylistLoaded(initialPlaylistUri, multivariantPlaylist)
                 },
-            ).also { wrapper ->
-                playlistTrackers.add(wrapper)
-            }
+            ).also { wrapper -> playlistTrackers.add(wrapper) }
         }
 
     // -------------------------------------------------------------------------
@@ -108,8 +155,26 @@ class AlpsManagerHls(
     // -------------------------------------------------------------------------
 
     private val isobmffPresentationsMap: MutableMap<Uri, List<Presentation>> = HashMap()
-    private val playlistPresentationsMap: MutableMap<Uri, List<Presentation>> = HashMap()
+    private val playlistPresentationsMap: MutableMap<Uri, Map<String, List<Presentation>>> =
+        HashMap()
 
+    /**
+     * Per-stream [HlsPlaylistTracker], used to map a selected audio track back to its rendition
+     * media-playlist URI through the tracker's audio [HlsRedundantGroup]s.
+     * Key = multivariant playlist URI (unique per HLS stream — content or interstitial).
+     */
+    private val streamPlaylistTrackers: MutableMap<Uri, HlsPlaylistTracker> = mutableMapOf()
+
+    /**
+     * Media-playlist URI of the currently selected audio rendition for the active stream, or `null`
+     * when it has not been resolved yet (e.g. before the first `EVENT_TRACKS_CHANGED`). When `null`,
+     * control-path lookups fall back to the first AC-4 rendition, preserving single-rendition
+     * behavior.
+     *
+     * For an AC-4 rendition this is the URI registered in [streamAlpsMaps], not the URI of the
+     * pathway currently in use, so it stays stable across content-steering pathway switches.
+     */
+    private var activeRenditionUri: Uri? = null
 
     /** Last presentation ID set by the user. Re-applied on stream change if
      * [presentationSelectionPersistenceEnabled] is true */
@@ -129,6 +194,11 @@ class AlpsManagerHls(
      */
     private val streamAlpsMaps: MutableMap<Uri, MutableMap<Uri, Alps>> = mutableMapOf()
 
+    internal var alpsFactory: () -> Alps = { Alps() }
+
+    /** Factory of the real trackers wrapped by [playlistTrackerFactory]. Replaceable in tests. */
+    internal var delegateTrackerFactory: HlsPlaylistTracker.Factory = DefaultHlsPlaylistTracker.FACTORY
+
     // -------------------------------------------------------------------------
     // Public methods
     // -------------------------------------------------------------------------
@@ -136,12 +206,10 @@ class AlpsManagerHls(
     override fun setActivePresentationId(presentationId: Int) {
         userPreferredPresentationId = presentationId
         if (presentationSelectionPersistenceEnabled) {
-            streamAlpsMaps.values.forEach { alpsMap ->
-                alpsMap.values.forEach { it.setActivePresentationId(presentationId) }
-            }
+            allAlpsInstances().forEach { it.setActivePresentationId(presentationId) }
         } else {
             _activeStreamUri.value?.let { uri ->
-                resolveAlpsInstanceForStreamUri(uri)?.setActivePresentationId(presentationId)
+                resolveActiveAlpsInstance(uri)?.setActivePresentationId(presentationId)
             }
         }
         updatePresentationsState()
@@ -149,7 +217,7 @@ class AlpsManagerHls(
 
     override fun getActivePresentationId(): Int? =
         activeStreamUri.value?.let { uri ->
-            resolveAlpsInstanceForStreamUri(uri)?.getActivePresentationId()
+            resolveActiveAlpsInstance(uri)?.getActivePresentationId()
         }
 
 
@@ -167,14 +235,15 @@ class AlpsManagerHls(
     }
 
     override fun release() {
-        streamAlpsMaps.values.forEach { alpsMap ->
-            alpsMap.values.forEach { it.release() }
-        }
+        allAlpsInstances().forEach { it.release() }
         streamAlpsMaps.clear()
+        streamPlaylistTrackers.clear()
+        activeRenditionUri = null
         playlistTrackers.clear()
         _activeStreamUri.update { null }
         playlistPresentationsMap.clear()
         isobmffPresentationsMap.clear()
+        _isobmffPresentations.update { emptyList() }
         userPreferredPresentationId = null
     }
 
@@ -185,14 +254,66 @@ class AlpsManagerHls(
     override fun onEvents(player: Player, events: AnalyticsListener.Events) {
         // Detect content ↔ interstitial transitions by resolving the currently *playing*
         // stream's multivariant playlist URI from the Player's timeline.
-        if (events.contains(AnalyticsListener.EVENT_POSITION_DISCONTINUITY)
-            || events.contains(AnalyticsListener.EVENT_TIMELINE_CHANGED)
-            || events.contains(AnalyticsListener.EVENT_IS_PLAYING_CHANGED)
-        ) {
+        if (activeStreamUriChangedEvents.any { events.contains(it) }) {
             val newStreamUri = resolveCurrentPlayingStreamUri(player)
-            if (newStreamUri != null && newStreamUri != activeStreamUri) {
+            if (newStreamUri != null && newStreamUri != _activeStreamUri.value) {
                 setCurrentStreamUri(newStreamUri)
             }
+        }
+
+        // Resolve the currently selected audio rendition so control-path lookups target the
+        // correct AC-4 instance when a stream carries multiple AC-4 (or AC-4 + non-AC-4) tracks.
+        if (renditionChangedEvents.any { events.contains(it) }) {
+            updateActiveRendition(player)
+        }
+    }
+
+    /**
+     * Resolves the media-playlist URI of the audio rendition currently selected in [player] for the
+     * active stream and stores it in [activeRenditionUri]. When it changes, presentation state is
+     * recomputed so the exposed presentations follow the selected audio track.
+     *
+     * Since media3 1.11 HLS track formats no longer carry a `GROUP-ID:NAME`
+     * [androidx.media3.common.Format.id], so the selected track is mapped back to its rendition by
+     * mirroring how media3 builds audio track groups (see
+     * `HlsMediaPeriod.buildAndPrepareAudioSampleStreamWrappers`): one track group per rendition
+     * `NAME` (exposed as [androidx.media3.common.Format.label]), whose `i`-th track is the `i`-th
+     * audio [HlsRedundantGroup] with that name, in playlist order.
+     *
+     * A non-AC-4 selection resolves to a URI absent from the stream's AC-4 map, which
+     * [resolveActiveAlpsInstance] then reports as "no ALPS instance", i.e. no presentations.
+     *
+     * An AC-4 selection resolves to the rendition URI registered in [streamAlpsMaps] rather than
+     * the group's current pathway URL, so a content-steering pathway switch (including one to a
+     * pathway cloned at runtime) keeps resolving to the same [Alps] instance.
+     */
+    private fun updateActiveRendition(player: Player) {
+        val streamUri = _activeStreamUri.value ?: return
+        val audioRedundantGroups =
+            streamPlaylistTrackers[streamUri]
+                ?.getRedundantGroups(HlsRedundantGroup.AUDIO_RENDITION)
+                ?: return
+        val newRenditionUri =
+            player.currentTracks.groups
+                .firstOrNull { group -> group.type == C.TRACK_TYPE_AUDIO && group.isSelected }
+                ?.let { group ->
+                    (0 until group.length)
+                        .firstOrNull { index -> group.isTrackSelected(index) }
+                        ?.let { index ->
+                            group.getTrackFormat(index).label?.let { label ->
+                                resolveRenditionGroup(
+                                    audioRedundantGroups,
+                                    renditionName = label,
+                                    indexInTrackGroup = index,
+                                )
+                            }
+                        }
+                }
+                ?.let { renditionGroup -> stableRenditionUri(streamUri, renditionGroup) }
+
+        if (newRenditionUri != activeRenditionUri) {
+            activeRenditionUri = newRenditionUri
+            updatePresentationsState()
         }
     }
 
@@ -205,8 +326,9 @@ class AlpsManagerHls(
      * belong to an AC-4 audio rendition.
      *
      * The lookup works as follows:
-     * 1. For each AC-4 rendition URI in [streamAlpsMaps], fetch the current
-     *    [androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist] snapshot from any tracker.
+     * 1. For each AC-4 rendition URI in [streamAlpsMaps], and every other pathway URL of its audio
+     *    [HlsRedundantGroup] (including pathways cloned by content steering at runtime), fetch the
+     *    current [androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist] snapshot from any tracker.
      * 2. Check whether any segment in that playlist, resolved against the playlist's `baseUri`,
      *    equals [segmentUri]. Also check the `#EXT-X-MAP` init segment URI.
      * 3. On match, return the [Alps] from the corresponding stream's map.
@@ -219,8 +341,12 @@ class AlpsManagerHls(
             return null
         }
 
-        for ((_, alpsMap) in streamAlpsMaps) {
+        for ((streamUri, alpsMap) in streamAlpsMaps) {
+            val alpsByPathwayUrl = LinkedHashMap<Uri, Alps>()
             for ((renditionUri, alps) in alpsMap) {
+                pathwayUrlsOf(streamUri, renditionUri).forEach { alpsByPathwayUrl.putIfAbsent(it, alps) }
+            }
+            for ((renditionUri, alps) in alpsByPathwayUrl) {
                 for (tracker in playlistTrackers) {
                     val snapshot =
                         runCatching { tracker.getPlaylistSnapshot(renditionUri, false) }.getOrNull()
@@ -259,6 +385,16 @@ class AlpsManagerHls(
      *
      * Duplicate rendition URLs (from a live playlist refresh) are naturally prevented by
      * checking [streamAlpsMaps] membership before registration.
+     *
+     * Every pathway URL of an AC-4 rendition's audio [HlsRedundantGroup] known at this point is
+     * registered against a single shared [Alps] instance. The control path resolves the instance
+     * from the rendition URL captured at track selection, while the data path resolves it from the
+     * URL of the pathway currently being loaded; sharing the instance keeps both in sync across
+     * pathway switches, which do not trigger a track-selection update.
+     *
+     * Pathways cloned by content steering after this call are not registered here; they are added
+     * to the same [HlsRedundantGroup] by media3 and resolved through it at lookup time (see
+     * [updateActiveRendition] and [resolveAlpsForSegmentUri]).
      */
     internal fun onMultivariantPlaylistLoaded(streamUri: Uri, playlist: HlsMultivariantPlaylist) {
         val alpsMap = streamAlpsMaps.getOrPut(streamUri) { mutableMapOf() }
@@ -270,16 +406,25 @@ class AlpsManagerHls(
             if (!isAc4) {
                 continue
             }
-            val alps = createAlpsInstance() ?: continue
+            val pathwayUrls = pathwayUrlsOf(streamUri, url)
+            val alps = pathwayUrls.firstNotNullOfOrNull { alpsMap[it] }
+                ?: createAlpsInstance()
+                ?: continue
+            pathwayUrls.forEach { alpsMap.getOrPut(it) { alps } }
             alpsMap[url] = alps
-        }
-        val presentations = playlist.tags
-            .filter { it.startsWith("#EXT-X-MEDIA:TYPE=AUDIO") }
-            .takeIf { tags ->
-                tags.any { it.contains("INSTREAM-ID") }
+            if (presentationSelectionPersistenceEnabled) {
+                userPreferredPresentationId?.let { alps.setActivePresentationId(it) }
             }
-            ?.mapIndexed(::parseAudioTagToPresentation) ?: emptyList()
-        playlistPresentationsMap[streamUri] = presentations
+        }
+        val presentationsByRenditionUriMap = playlist.tags
+            .filter { it.startsWith("#EXT-X-MEDIA:TYPE=AUDIO") }
+            .filter { it.contains("INSTREAM-ID") }
+            .mapIndexed { index, tag ->
+                tag.substringAfter("URI=\"").substringBefore("\"") to
+                        parseAudioTagToPresentation(index, tag)
+            }.groupBy({ it.first }, { it.second })
+
+        playlistPresentationsMap[streamUri] = presentationsByRenditionUriMap
         updatePresentationsState(skipIsobmff = true)
     }
 
@@ -342,7 +487,7 @@ class AlpsManagerHls(
                         language = language,
                         label = extractTagAttribute(tag, "NAME") ?: "",
                         isGroupLabel = false,
-                    )
+                    ),
                 ),
             selectionPriority = 0,
             audioRenderingIndication = 0,
@@ -350,14 +495,62 @@ class AlpsManagerHls(
         )
     }
 
+    /** Returns every registered [Alps] instance once, even when shared by several pathway URLs. */
+    private fun allAlpsInstances(): Set<Alps> =
+        streamAlpsMaps.values.flatMapTo(LinkedHashSet()) { it.values }
+
+    /**
+     * Returns the audio [HlsRedundantGroup] exposed as track [indexInTrackGroup] of the track group
+     * for [renditionName], or `null` if it cannot be resolved (e.g. the selected audio is muxed into
+     * the variants and has no rendition).
+     */
+    private fun resolveRenditionGroup(
+        audioRedundantGroups: List<HlsRedundantGroup>,
+        renditionName: String,
+        indexInTrackGroup: Int,
+    ): HlsRedundantGroup? =
+        audioRedundantGroups
+            .filter { it.groupKey.name == renditionName }
+            .getOrNull(indexInTrackGroup)
+
+    /**
+     * Returns the URI of [renditionGroup] registered in the AC-4 map of [streamUri], or the group's
+     * current pathway URL when none of its URLs is registered (i.e. a non-AC-4 rendition).
+     */
+    private fun stableRenditionUri(streamUri: Uri, renditionGroup: HlsRedundantGroup): Uri? {
+        val alpsMap = streamAlpsMaps[streamUri].orEmpty()
+        return runCatching {
+            renditionGroup.allPlaylistUrls.firstOrNull { it in alpsMap }
+                ?: renditionGroup.currentPlaylistUrl
+        }.getOrNull()
+    }
+
+    /**
+     * Returns every pathway URL of the audio [HlsRedundantGroup] of [streamUri] containing [url],
+     * including pathways cloned by content steering after the multivariant playlist was loaded, or
+     * just [url] when no such group is known.
+     *
+     * The groups are owned and mutated by the playback thread's tracker, while this may be called
+     * from a loading thread, so a failed read falls back to [url].
+     */
+    private fun pathwayUrlsOf(streamUri: Uri, url: Uri): Set<Uri> =
+        runCatching {
+            streamPlaylistTrackers[streamUri]
+                ?.getRedundantGroups(HlsRedundantGroup.AUDIO_RENDITION)
+                ?.firstOrNull { url in it.allPlaylistUrls }
+                ?.allPlaylistUrls
+        }.getOrNull() ?: setOf(url)
+
     private fun createAlpsInstance(): Alps? {
         return try {
-            Alps().apply {
-                setPresentationsChangedCallback(object : PresentationsChangedCallback {
-                    override fun onPresentationsChanged() {
-                        updatePresentationsState()
-                    }
-                })
+            alpsFactory().apply {
+                setPresentationsChangedCallback(
+                    object : PresentationsChangedCallback {
+                        override fun onPresentationsChanged() {
+                            updatePresentationsState()
+                        }
+                    },
+                )
             }
         } catch (e: AlpsException) {
             AlpsLoggerProvider.e("failed to create Alps: ${e.message}")
@@ -365,9 +558,19 @@ class AlpsManagerHls(
         }
     }
 
-    private fun resolveAlpsInstanceForStreamUri(streamUri: Uri): Alps? {
+    /**
+     * Resolves the [Alps] instance for the audio rendition currently selected on [streamUri].
+     *
+     * When [activeRenditionUri] is known, the instance registered for that rendition is returned;
+     * a selection that is not an AC-4 rendition therefore yields `null`.
+     * When it is not yet resolved (`null`), the first AC-4 instance is returned as a fallback so
+     * single-rendition streams behave exactly as before track selection is known.
+     */
+    private fun resolveActiveAlpsInstance(streamUri: Uri): Alps? {
         val alpsMap = streamAlpsMaps[streamUri] ?: return null
-        return alpsMap.values.firstOrNull()
+        return activeRenditionUri
+            ?.let { renditionUri -> alpsMap[renditionUri] }
+            ?: if (activeRenditionUri == null) alpsMap.values.firstOrNull() else null
     }
 
     private fun updateIsobmffPresentations(currentStreamUri: Uri, alps: Alps) {
@@ -385,7 +588,7 @@ class AlpsManagerHls(
         var activePresentationId = TV_DEFAULT_PRESENTATION.id
 
         currentStreamUri?.let {
-            resolveAlpsInstanceForStreamUri(currentStreamUri)?.let { alps ->
+            resolveActiveAlpsInstance(currentStreamUri)?.let { alps ->
                 try {
                     activePresentationId = alps.getActivePresentationId()
                 } catch (e: AlpsException) {
@@ -402,19 +605,45 @@ class AlpsManagerHls(
                 .map {
                     AlpsPresentationWrapper.from(
                         it,
-                        it.id == activePresentationId
+                        it.id == activePresentationId,
                     )
                 }
 
         val playlistPresentations =
-            playlistPresentationsMap.map { (uri, presentations) ->
-                uri to presentations.map {
-                    AlpsPresentationWrapper.from(
-                        presentation = it,
-                        isActive = it.id == activePresentationId
-                    )
-                }
-            }.toMap()
+            playlistPresentationsMap.mapValues { (_, presentationsByRenditionUri) ->
+                presentationsByRenditionUri.values
+                    .flatten()
+                    .map { presentation ->
+                        AlpsPresentationWrapper.from(
+                            presentation = presentation,
+                            isActive = presentation.id == activePresentationId,
+                        )
+                    }
+            }
+
+
+        val playlistPresentationsForActiveRendition =
+            playlistPresentationsMap.mapValues { (_, presentationsByRenditionUri) ->
+                presentationsByRenditionUri
+                    .filter {
+                        // Find presentations for the currently active audio rendition.
+                        // If no active rendition is known yet, return all presentations for the stream.
+                            (uri, _) ->
+                        activeRenditionUri?.toString()?.contains(uri) ?: true
+                    }.values
+                    .flatten()
+                    .map { presentation ->
+                        AlpsPresentationWrapper.from(
+                            presentation = presentation,
+                            isActive = presentation.id == activePresentationId,
+                        )
+                    }
+            }
+
+        _playlistPresentationsForActiveRendition.update {
+            playlistPresentationsForActiveRendition
+        }
+
         _playlistPresentations.update {
             playlistPresentations
         }
